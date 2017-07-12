@@ -1,4 +1,4 @@
-# Kitchen-Planning
+# Kitchen Planner
 A program for managing recipes and kitchen stock.
 
 There are two key components to the database:
