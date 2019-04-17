@@ -1,4 +1,4 @@
-# Kitchen Planner
+# ReadyChef
 A program for managing recipes and kitchen stock.
 
 There are two key components to the database:
