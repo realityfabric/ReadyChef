@@ -1,8 +1,4 @@
 <?php
-/*
- * This class stores user data, including a pointer to an instance of the Pantry class specific to the user.
- * User data is pulled from the user table.
- */
 class Ingredient
 {
 	private $id; // int
