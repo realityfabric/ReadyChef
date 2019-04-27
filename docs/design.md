@@ -11,9 +11,9 @@ The ERD consists of nine tables with eight relationships.
 
 ![](./assets/images/erd-20190421.png)
 
-### user:
+### account:
 
-used to store data about the user
+used to store data about the user account
 
 ##### *id* : INT PK
 
@@ -39,7 +39,7 @@ No current plans for this data field, but it can be used to warn the users that 
 
 used to track login attempts to prevent brute force attacks or DDoS
 
-##### *user_id* : INT FK
+##### *account_id* : INT FK
 
 Links the login attempt to a user account. It's possible this would be better if it were linked to username instead.
 
@@ -95,9 +95,9 @@ Human readable name of the category (e.g. dairy, meat, etc)
 
 used to create a M:N relationship between users and ingredients
 
-##### user_id : INT FK
+##### account_id : INT FK
 
-relation to user table
+relation to account table
 
 ##### ingredient_id : INT FK
 
@@ -155,7 +155,7 @@ For the PHP piece of the puzzle, there are five classes with five relationships.
 
 ### User: 
 
-This class stores user data, including a pointer to an instance of the Pantry class specific to the user. User data is pulled from the `user` table.
+This class stores user data, including a pointer to an instance of the Pantry class specific to the user. User data is pulled from the `account` table.
 
 ### Pantry:
 
