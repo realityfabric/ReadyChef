@@ -14,7 +14,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE login_history (
-	user_id INTEGER REFERENCES account (id),
+	account_id INTEGER REFERENCES account (id),
 	success BOOL NOT NULL DEFAULT (FALSE),
 	login_time TIMESTAMP DEFAULT NOW()
 );
