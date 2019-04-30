@@ -17,15 +17,17 @@ class Category
 	
 	/* getName
 	 * Returns the name of the category
+	 * @return the name of the Category instance
 	 */
 	public function getName () {
-		// TODO: get name
+		return $this->name;
 	}
 
 	/* getId
 	 * Returns the id of the category
+	 * @return the id of the Category instance
 	 */
 	public function getId () {
-		// TODO: get id
+		return $this->id;
 	}
 }
