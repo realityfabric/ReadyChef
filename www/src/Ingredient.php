@@ -3,7 +3,9 @@ class Ingredient
 {
 	private $id; // int
 	private $name; // string
-	private $categories // array of categories
+	private $categories; // array of categories
+		
+	
 
 	/* getName
 	 * Returns the name of the ingredient
