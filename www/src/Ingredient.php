@@ -7,7 +7,7 @@ class Ingredient
 
 	/* getName
 	 * Returns the name of the ingredient
-	 * @name the name of the ingredient
+	 * @return the name of the ingredient
 	 */
 	public function getName () {
 		// TODO: return name
@@ -15,6 +15,7 @@ class Ingredient
 
 	/* getId
 	 * Returns the id of the ingredient
+	 * @return the id of the Ingredient instance
 	 */
 	public function getId () {
 		// TODO return id
@@ -22,7 +23,7 @@ class Ingredient
 
 	/* getCategories
 	 * Returns an array of categories which the ingredient is associated with
-	 * @categories the list of categories which is returned
+	 * @return An array of Category instances which are associated with the Ingredient instance
 	 */
 	public function getCategories () {
 		// TODO: return array of categories
@@ -31,7 +32,7 @@ class Ingredient
 	/* hasCategory
 	 * Checks to see if the ingredient is associated with a specific category
 	 * @category the category which is being searched for
-	 * @flag a boolean value: true if category is associated with the ingredient, otherwise false
+	 * @return a boolean value: true if category is associated with the ingredient, otherwise false
 	 */
 	public function hasCategory ($category) {
 		// TODO: check for category
