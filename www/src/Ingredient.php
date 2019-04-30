@@ -24,7 +24,7 @@ class Ingredient
 	 * @return the name of the ingredient
 	 */
 	public function getName () {
-		// TODO: return name
+		return $this->name;
 	}
 
 	/* getId
@@ -32,7 +32,7 @@ class Ingredient
 	 * @return the id of the Ingredient instance
 	 */
 	public function getId () {
-		// TODO return id
+		return $this->id;
 	}
 
 	/* getCategories
@@ -40,7 +40,7 @@ class Ingredient
 	 * @return An array of Category instances which are associated with the Ingredient instance
 	 */
 	public function getCategories () {
-		// TODO: return array of categories
+		return $this->categories;
 	}
 
 	/* hasCategory
@@ -49,6 +49,11 @@ class Ingredient
 	 * @return a boolean value: true if category is associated with the ingredient, otherwise false
 	 */
 	public function hasCategory ($category) {
-		// TODO: check for category
+		// TODO: input validation
+		foreach ($this->categories as $c) {
+			if ($c == $category)
+				return true;
+			}
+		return false;
 	}
 }
