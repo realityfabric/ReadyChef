@@ -4,8 +4,20 @@ class Ingredient
 	private $id; // int
 	private $name; // string
 	private $categories; // array of categories
-		
 	
+	/*
+	 * __construct
+	 * The constructor for the Ingredient class
+	 * @id The id of the Ingredient instance
+	 * @name The name of the Ingredient instance
+	 * @categories An array of categories associated with the Ingredient instance
+	 */
+	function __construct ($id, $name, $categories) {
+		// TODO: input validation
+		$this->id = $id;
+		$this->name = $name;
+		$this->categories = $categories;
+	}
 
 	/* getName
 	 * Returns the name of the ingredient
