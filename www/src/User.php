@@ -7,7 +7,7 @@ class User
 {
 	private $id; // int
 	private $username; // string
-	private $pantry // Pantry (custom class)
+	private $pantry; // Pantry (custom class)
 	
 	/* getPantry
 	 * Generates a Pantry object and assigns it to the User instance
