@@ -56,9 +56,11 @@ class User
 
 		// TODO: implement login logging
 		if (password_verify($password, $account['hash'])) {
-			// TODO: create instance of Pantry associated with User
-			// TODO: create instance of User
-			return true; // TODO: return instance of User
+			$id = $account['id'];
+			$pantry = new Pantry($id);
+			$user = new User($id, $sanitize_username, $pantry);
+
+			return $user;
 		} else {
 			return false;
 		}
