@@ -1,10 +1,13 @@
 <?php
+include_once("../config/config.php");
+include_once("../src/Category.php");
+
 class Ingredient
 {
 	private $id; // int
 	private $name; // string
 	private $categories; // array of categories
-	
+
 	/*
 	 * __construct
 	 * The constructor for the Ingredient class
@@ -55,5 +58,33 @@ class Ingredient
 				return true;
 			}
 		return false;
+	}
+
+	/* loadIngredient
+	 * Searches the database for an ingredient and returns an instance of it
+	 * @id - The ID of the ingredient in the DB
+	 * @return - An instance of Ingredient matching the ID
+	 */
+	public static function loadIngredient ($id) {
+		global $db;
+
+		$dbhost = $db['host'];
+		$dbuser = $db['user'];
+		$dbpassword = $db['password'];
+
+		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+
+		// TODO: input validation / sanitization
+		$result = pg_query($dbconn, "SELECT * FROM ingredient WHERE id = $id");
+		$row = pg_fetch_assoc($result);
+
+		// TODO: load categories for the loaded ingredient
+
+		$ingredientId = $row['id'];
+		$ingredientName = $row['name'];
+
+		$ingredient = new Ingredient ($ingredientId, $ingredientName, array());
+
+		return $ingredient;
 	}
 }
