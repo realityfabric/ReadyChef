@@ -10,7 +10,20 @@ class User
 	private $id; // int
 	private $username; // string
 	private $pantry; // Pantry (custom class)
-	
+
+	/* __construct
+	 * Create an instance of the User class
+	 * @id - The ID of the user (int)
+	 * @username - The username of the user (string)
+	 * @pantry - An instance of the Pantry class which is associated with the user (Pantry)
+	 */
+	public function __construct ($id, $username, $pantry) {
+		// TODO: input validiation
+		$this->id = $id;
+		$this->username = $username;
+		$this->pantry = $pantry;
+	}
+
 	/* getPantry
 	 * Generates a Pantry object and assigns it to the User instance
 	 * @pantry Returns the Pantry object
