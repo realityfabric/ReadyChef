@@ -45,7 +45,7 @@ class User
 		$dbuser = $db['user'];
 		$dbpassword = $db['password'];
 
-		$dbconn = pg_connect("host='localhost' user='readychef' password='ReadyChefDev'");
+		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
 
 		$sanitize_username = pg_escape_string($username);
 		$sanitize_password = pg_escape_string($password);
