@@ -1,7 +1,7 @@
 <?php
 class Pantry
 {
-	private ingredients; // array of Ingredient objects\
+	private $ingredients; // array of Ingredient objects
 
 	/* hasIngredient
 	 * Checks if the pantry has a specific ingredient.
