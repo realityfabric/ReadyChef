@@ -1,7 +1,33 @@
 <?php
+include_once("../config/config.php");
+include_once("../src/Ingredient.php");
+
 class Pantry
 {
-	private $ingredients; // array of Ingredient objects
+	private $ingredients; // Array of tuples (Ingredient, date)
+
+	public function __construct ($userId) {
+		global $db;
+
+		$dbhost = $db['host'];
+		$dbuser = $db['user'];
+		$dbpassword = $db['password'];
+
+		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+
+		$this->ingredients = array();
+
+		// TODO: input validation / sanitization
+		// This isn't particularly secure...
+		$result = pg_query($dbconn, "SELECT * FROM account_has_ingredient WHERE account_id = $userId");
+
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$ingredientId = $row['ingredient_id'];
+			$ingredient = Ingredient::loadIngredient($ingredientId);
+
+			$this->ingredients[$ingredient->getName()] = array($ingredient, $row['date_purchased']);
+		}
+	}
 
 	/* hasIngredient
 	 * Checks if the pantry has a specific ingredient.
