@@ -38,7 +38,7 @@ class User
 	 * @password the password of the user
 	 * @return the instance of the User class, or false if failed
 	 */
-	public function login ($username, $password) {
+	public static function login ($username, $password) {
 		global $db;
 
 		$dbhost = $db['host'];
