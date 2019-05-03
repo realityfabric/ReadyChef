@@ -51,6 +51,8 @@ class Category
 		$result = pg_query($dbconn, "SELECT * FROM category WHERE id = $id");
 		$row = pg_fetch_assoc($result);
 
-		print_r($row);
+		$category = new Category($row['id'], $row['name']);
+
+		return $category;
 	}
 }
