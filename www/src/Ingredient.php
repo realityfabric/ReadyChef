@@ -82,8 +82,17 @@ class Ingredient
 
 		$ingredientId = $row['id'];
 		$ingredientName = $row['name'];
+		$categories = array();
 
-		$ingredient = new Ingredient ($ingredientId, $ingredientName, array());
+		// TODO: input validation / sanitization
+		$result = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $id");
+
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$categoryId = $row['category_id'];
+			$categories[] = Category::loadCategory($categoryId);
+		}
+
+		$ingredient = new Ingredient ($ingredientId, $ingredientName, $categories);
 
 		return $ingredient;
 	}
