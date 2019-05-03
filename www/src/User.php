@@ -63,4 +63,32 @@ class User
 			return false;
 		}
 	}
+
+	/* register
+	 * Register a new user
+	 * @username - the desired username
+	 * @password - the desired password
+	 * @return - true if successfully registered, false if unsuccessfully registered
+	 */
+	public static function register ($username, $password) {
+		global $db;
+
+		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+
+		$query = pg_prepare($dbconn, "checkAccounts", "SELECT * FROM account WHERE username = $1");
+		$result = pg_execute($dbconn, "checkAccounts", array($username));
+
+		if (pg_num_rows($result) > 0) {
+			return false;
+		}
+
+		$sanitize_username = pg_escape_string($username);
+		$sanitize_password = pg_escape_string($password);
+		$hash = password_hash($sanitize_password, PASSWORD_DEFAULT);
+
+		$query = pg_prepare($dbconn, "newUser", "INSERT INTO account (username, hash) VALUES ($1, $2)");
+		$result = pg_execute($dbconn, "newUser", array($sanitize_username, $hash));
+
+		return $result; // false on failure
+	}
 }
