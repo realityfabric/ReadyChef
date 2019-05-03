@@ -74,8 +74,8 @@ class Ingredient
 
 		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
 
-		// TODO: input validation / sanitization
-		$result = pg_query($dbconn, "SELECT * FROM ingredient WHERE id = $id");
+		$query = pg_prepare($dbconn, "selectIngredient", "SELECT * FROM ingredient WHERE id = $1");
+		$result = pg_execute($dbconn, "selectIngredient", array($id));
 		$row = pg_fetch_assoc($result);
 
 		// TODO: load categories for the loaded ingredient

@@ -47,8 +47,8 @@ class Category
 
 		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
 
-		// TODO: input validation / sanitization
-		$result = pg_query($dbconn, "SELECT * FROM category WHERE id = $id");
+		$query = pg_prepare($dbconn, "selectCategory", "SELECT * FROM category WHERE id = $1");
+		$result = pg_execute($dbconn, "selectCategory", array($id));
 		$row = pg_fetch_assoc($result);
 
 		$category = new Category($row['id'], $row['name']);

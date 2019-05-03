@@ -50,7 +50,8 @@ class User
 		$sanitize_username = pg_escape_string($username);
 		$sanitize_password = pg_escape_string($password);
 
-		$result = pg_query($dbconn, "SELECT * FROM account WHERE username = '$sanitize_username'");
+		$query = pg_prepare($dbconn, "selectUser", "SELECT * FROM account WHERE username = $1");
+		$result = pg_execute($dbconn, "selectUser", array($sanitize_username));
 		$account = pg_fetch_assoc($result);
 
 		// TODO: implement login logging

@@ -17,9 +17,9 @@ class Pantry
 
 		$this->ingredients = array();
 
-		// TODO: input validation / sanitization
 		// This isn't particularly secure...
-		$result = pg_query($dbconn, "SELECT * FROM account_has_ingredient WHERE account_id = $userId");
+		$query = pg_prepare($dbconn, "selectPantry", "SELECT * FROM account_has_ingredient WHERE account_id = $1");
+		$result = pg_execute($dbconn, "selectPantry", array($userId));
 
 		while (($row = pg_fetch_assoc($result)) != false) {
 			$ingredientId = $row['ingredient_id'];
