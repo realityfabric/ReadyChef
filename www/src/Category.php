@@ -1,4 +1,6 @@
 <?php
+include_once("../config/config.php");
+
 class Category
 {
 	private $id; // int
@@ -14,7 +16,7 @@ class Category
 		$this->id = $id;
 		$this->name = $name;
 	}
-	
+
 	/* getName
 	 * Returns the name of the category
 	 * @return the name of the Category instance
@@ -29,5 +31,26 @@ class Category
 	 */
 	public function getId () {
 		return $this->id;
+	}
+
+	/* loadCategory
+	 * Searches the database and returns the category associated with the ID
+	 * @id - The ID of the category in the DB
+	 * @return - An instance of the Category, or false
+	 */
+	public static function loadCategory ($id) {
+		global $db;
+
+		$dbhost = $db['host'];
+		$dbuser = $db['user'];
+		$dbpassword = $db['password'];
+
+		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+
+		// TODO: input validation / sanitization
+		$result = pg_query($dbconn, "SELECT * FROM category WHERE id = $id");
+		$row = pg_fetch_assoc($result);
+
+		print_r($row);
 	}
 }
