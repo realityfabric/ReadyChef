@@ -53,6 +53,7 @@ class User
 		$result = pg_query($dbconn, "SELECT * FROM account WHERE username = '$sanitize_username'");
 		$account = pg_fetch_assoc($result);
 
+		// TODO: implement login logging
 		if (password_verify($password, $account['hash'])) {
 			// TODO: create instance of Pantry associated with User
 			// TODO: create instance of User
