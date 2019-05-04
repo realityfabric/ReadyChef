@@ -13,4 +13,5 @@ FROM account_has_ingredient
 	JOIN recipe
 		ON recipe.id = r.recipe_id
 GROUP BY recipe.name, r.recipe_id
+HAVING (COUNT(*) / (SELECT COUNT(*) FROM recipe_has_ingredient WHERE recipe_id = r.recipe_id)) = 1
 ORDER BY ratio DESC;
