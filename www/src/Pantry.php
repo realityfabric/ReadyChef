@@ -21,6 +21,8 @@ class Pantry
 
 			$this->ingredients[$ingredient->getName()] = array($ingredient, $row['date_purchased']);
 		}
+
+		pg_close($dbconn);
 	}
 
 	/* hasIngredient

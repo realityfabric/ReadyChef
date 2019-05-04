@@ -48,6 +48,7 @@ class Category
 
 		$category = new Category($row['id'], $row['name']);
 
+		pg_close($dbconn);
 		return $category;
 	}
 }

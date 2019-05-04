@@ -55,8 +55,10 @@ class User
 			$pantry = new Pantry($id);
 			$user = new User($id, $sanitize_username, $pantry);
 
+			pg_close($dbconn);
 			return $user;
 		} else {
+			pg_close($dbconn);
 			return false;
 		}
 	}
@@ -84,6 +86,7 @@ class User
 		$query = pg_prepare($dbconn, "newUser", "INSERT INTO account (username, hash) VALUES ($1, $2)");
 		$result = pg_execute($dbconn, "newUser", array($sanitize_username, $hash));
 
+		pg_close($dbconn);
 		return $result; // false on failure
 	}
 }

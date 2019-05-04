@@ -88,6 +88,7 @@ class Ingredient
 
 		$ingredient = new Ingredient ($ingredientId, $ingredientName, $categories);
 
+		pg_close($dbconn);
 		return $ingredient;
 	}
 }
