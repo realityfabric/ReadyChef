@@ -1,5 +1,6 @@
 <?php
 include_once("../config/config.php");
+include_once("../src/DBConnect.php");
 
 class Category
 {
@@ -39,13 +40,7 @@ class Category
 	 * @return - An instance of the Category, or false
 	 */
 	public static function loadCategory ($id) {
-		global $db;
-
-		$dbhost = $db['host'];
-		$dbuser = $db['user'];
-		$dbpassword = $db['password'];
-
-		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+		$dbconn = connectToDatabase();
 
 		$query = pg_prepare($dbconn, "selectCategory", "SELECT * FROM category WHERE id = $1");
 		$result = pg_execute($dbconn, "selectCategory", array($id));

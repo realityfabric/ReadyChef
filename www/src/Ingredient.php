@@ -66,13 +66,7 @@ class Ingredient
 	 * @return - An instance of Ingredient matching the ID
 	 */
 	public static function loadIngredient ($id) {
-		global $db;
-
-		$dbhost = $db['host'];
-		$dbuser = $db['user'];
-		$dbpassword = $db['password'];
-
-		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+		$dbconn = connectToDatabase();
 
 		$query = pg_prepare($dbconn, "selectIngredient", "SELECT * FROM ingredient WHERE id = $1");
 		$result = pg_execute($dbconn, "selectIngredient", array($id));

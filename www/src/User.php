@@ -1,6 +1,7 @@
 <?php
 include_once("../config/config.php");
 include_once("../src/Pantry.php");
+include_once("../src/DBConnect.php");
 /*
  * This class stores user data, including a pointer to an instance of the Pantry class specific to the user.
  * User data is pulled from the user table.
@@ -39,13 +40,7 @@ class User
 	 * @return the instance of the User class, or false if failed
 	 */
 	public static function login ($username, $password) {
-		global $db;
-
-		$dbhost = $db['host'];
-		$dbuser = $db['user'];
-		$dbpassword = $db['password'];
-
-		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+		$dbconn = connectToDatabase();
 
 		$sanitize_username = pg_escape_string($username);
 		$sanitize_password = pg_escape_string($password);
@@ -73,9 +68,7 @@ class User
 	 * @return - true if successfully registered, false if unsuccessfully registered
 	 */
 	public static function register ($username, $password) {
-		global $db;
-
-		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+		$dbconn = connectToDatabase();
 
 		$query = pg_prepare($dbconn, "checkAccounts", "SELECT * FROM account WHERE username = $1");
 		$result = pg_execute($dbconn, "checkAccounts", array($username));

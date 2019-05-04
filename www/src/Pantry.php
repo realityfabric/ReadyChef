@@ -7,13 +7,7 @@ class Pantry
 	private $ingredients; // Array of tuples (Ingredient, date)
 
 	public function __construct ($userId) {
-		global $db;
-
-		$dbhost = $db['host'];
-		$dbuser = $db['user'];
-		$dbpassword = $db['password'];
-
-		$dbconn = pg_connect("host='$dbhost' user='$dbuser' password='$dbpassword'");
+		$dbconn = connectToDatabase();
 
 		$this->ingredients = array();
 
