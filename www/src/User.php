@@ -29,7 +29,7 @@ class User
 	 * @pantry Returns the Pantry object
 	 */
 	public function getPantry () {
-		// TODO
+		return $this->pantry;
 	}
 
 	/* login

@@ -32,9 +32,11 @@ class Pantry
 	/* hasIngredient
 	 * Checks if the pantry has a specific ingredient.
 	 * @ingredient The ingredient in question
+	 * @return true if ingredient is in the pantry, else false
 	 */
 	public function hasIngredient ($ingredient) {
-		// TODO: check for ingredient
+		// TODO: input validation
+		return array_key_exists($ingredient->getName(), $this->ingredients);
 	}
 
 	/* addIngredient
