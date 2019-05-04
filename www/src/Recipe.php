@@ -182,4 +182,45 @@ class Recipe
 		pg_close($dbconn);
 		return $categories;
 	}
+
+	public static function searchByDBPantry ($userId, $ratio = 0) {
+
+	}
+
+	/* searchRecipeIdsByDBPantry
+	 * searches the database for recipe id by looking up the ingredients a user has in the DB
+	 * @userId - The ID of a user account
+	 * @ratio - The ratio of ingredients not on hand to on hand. Default is 0, returning all recipes.
+	 * @return - An array of recipe ids for recipes
+	 */
+	public static function searchRecipeIdsByDBPantry ($userId, $ratio = 0) {
+		$dbconn = connectToDatabase();
+
+		$query =
+			pg_prepare($dbconn,
+			"searchRecipeIdsByDBPantry",
+			"SELECT
+				recipe.id
+			FROM account_has_ingredient
+				JOIN recipe_has_ingredient rhi
+					ON account_has_ingredient.ingredient_id = rhi.ingredient_id
+				JOIN recipe
+					ON recipe.id = rhi.recipe_id
+			WHERE account_has_ingredient.account_id = $1
+			GROUP BY recipe.id, rhi.recipe_id
+			HAVING (COUNT(*) / (SELECT COUNT(*) FROM recipe_has_ingredient WHERE recipe_id = rhi.recipe_id)) >= $2");
+
+		$result = pg_execute($dbconn,
+			"searchRecipeIdsByDBPantry",
+			array($userId, $ratio)
+		);
+
+		$recipeIds = array();
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$recipeIds[] = $row['id'];
+		}
+
+		pg_close($dbconn);
+		return $recipeIds;
+	}
 }
