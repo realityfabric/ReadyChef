@@ -129,17 +129,14 @@ class Recipe
 			"SELECT ingredient.id, ingredient.name FROM ingredient WHERE ingredient.id = $1"
 		);
 		while (($row = pg_fetch_assoc($resultIds)) != false) {
-			echo "<p>" . $row['ingredient_id'] . "</p>";
 			$resultIngredient =
 				pg_execute($dbconn,
 				"selectIngredientById",
 				array($row['ingredient_id'])
 			);
 			$rowIngredient = pg_fetch_assoc($resultIngredient);
-			echo "<p>" . $rowIngredient . "</p>";
 			$ingredient = new Ingredient ($rowIngredient['id'], $rowIngredient['name']);
 			$ingredients[$ingredient->getName()] = $ingredient;
-			echo "<p>endwhile</p>";
 		}
 
 		pg_close($dbconn);
@@ -172,17 +169,14 @@ class Recipe
 			"SELECT category.id, category.name FROM category WHERE category.id = $1"
 		);
 		while (($row = pg_fetch_assoc($resultIds)) != false) {
-			echo "<p>" . $row['category_id'] . "</p>";
 			$resultCategory =
 				pg_execute($dbconn,
 				"selectCategoryById",
 				array($row['category_id'])
 			);
 			$rowCategory = pg_fetch_assoc($resultCategory);
-			echo "<p>" . $rowCategory . "</p>";
 			$category = new Category ($rowCategory['id'], $rowCategory['name']);
 			$categories[$category->getName()] = $category;
-			echo "<p>endwhile</p>";
 		}
 
 		pg_close($dbconn);
