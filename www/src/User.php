@@ -25,6 +25,20 @@ class User
 		$this->pantry = $pantry;
 	}
 
+	/* getId
+	 * @return - The ID of the User account
+	 */
+	public function getId () {
+		return $this->id;
+	}
+
+	/* getUsername
+	 * @return - The username of the user account
+	 */
+	public function getUsername() {
+		return $this->username;
+	}
+
 	/* getPantry
 	 * Generates a Pantry object and assigns it to the User instance
 	 * @pantry Returns the Pantry object
