@@ -51,6 +51,7 @@ class Pantry
 				// if the insertion was successful, add it to the pantry object
 				$this->ingredients[$ingredient->getName()] = array($ingredient, date("Y-m-d"));
 			}
+			pg_close($dbconn);
 			return $result;
 		} else { // ingredient already exists
 			return false;
