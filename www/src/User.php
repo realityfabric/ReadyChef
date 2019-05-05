@@ -98,4 +98,13 @@ class User
 	public function addIngredientToPantry ($ingredient) {
 		return $this->pantry->addIngredient($this->id, $ingredient);
 	}
+
+	/* removeIngredientFromPantry
+	 * Removes an ingredient from the user's pantry and updates the database
+	 * @ingredient - The ingredient to be added
+	 * @return - A resource object from pg_execute, or false on failure (including ingredient already missing from the user's pantry)
+	 */
+	public function removeIngredientFromPantry ($ingredient) {
+		return $this->pantry->removeIngredient($this->id, $ingredient);
+	}
 }
