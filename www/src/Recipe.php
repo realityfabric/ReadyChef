@@ -183,8 +183,22 @@ class Recipe
 		return $categories;
 	}
 
+	/* searchByDBPantry
+	 * searches the database for recipes with the given ratio of ingredients on hand to ingredients required (1: 100%, 0: 0%)
+	 * @userId - the ID of the user account whose pantry is being analyzed
+	 * @ratio - the ratio of ingredients on hand to required (e.g. 3 ingredients on hand and 4 required would have a ratio of 3/4, or .75)
+	 *		default ratio is 0 (returning all recipes)
+	 * @return - an array of Recipe instances
+	 */
 	public static function searchByDBPantry ($userId, $ratio = 0) {
+		$recipeIds = Recipe::searchRecipeIdsByDBPantry($userId, $ratio);
+		$recipes = array();
 
+		foreach($recipeIds as $id) {
+			$recipes[] = Recipe::loadRecipe($id);
+		}
+
+		return $recipes;
 	}
 
 	/* searchRecipeIdsByDBPantry
