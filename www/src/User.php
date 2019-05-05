@@ -89,4 +89,13 @@ class User
 		pg_close($dbconn);
 		return $result; // false on failure
 	}
+
+	/* addIngredientToPantry
+	 * Adds an ingredient to the user's pantry and updates the database
+	 * @ingredient - The ingredient to be added
+	 * @return - A resource object from pg_execute, or false on failure (including ingredient already being in the user's pantry)
+	 */
+	public function addIngredientToPantry ($ingredient) {
+		return $this->pantry->addIngredient($this->id, $ingredient);
+	}
 }
