@@ -25,11 +25,7 @@ a unique string used to log in
 
 ##### hash : STRING
 
-the result of the user's password and salt being combined and then run through a hash algorithm
-
-##### salt : STRING
-
-a randomly generated string of characters used to strengthen password hashes (prevents rainbow tables)
+the user's password hash, including salt and algorithm type
 
 ##### password_set : DATETIME
 
@@ -151,7 +147,7 @@ relation to category table
 
 For the PHP piece of the puzzle, there are five classes with five relationships. There may be a sixth class (represented by the Cookbook class in the diagram) but I think I will implement those features as functions instead of class methods in order to optimize server response time.
 
-![](assets/images/uml-20190421.png)
+![](assets/images/uml-20190505.png)
 
 ### User: 
 
