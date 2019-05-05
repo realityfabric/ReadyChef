@@ -60,9 +60,24 @@ class Pantry
 
 	/* removeIngredient
 	 * Removes an ingredient from the User's pantry
+	 * @userId - The ID of the user account for the pantry
 	 * @ingredient The ingredient being removed.
+	 * @return - the pg_execute result if successful, otherwise false (either pg_execute failed, or the ingredient wasn't in the db)
 	 */
-	public function removeIngredient ($ingredient) {
-		// TODO: remove ingredient
+	public function removeIngredient ($userId, $ingredient) {
+		// check to make sure the ingredient exists in the pantry
+		if ($this->hasIngredient($ingredient)) {
+			$dbconn = connectToDatabase();
+			$query = pg_prepare($dbconn, "removeIngredientFromPantry", "DELETE FROM account_has_ingredient WHERE account_id = $1 AND ingredient_id = $2");
+			$result = pg_execute($dbconn, "removeIngredientFromPantry", array($userId, $ingredient->getId()));
+			if ($result) {
+				// if the deletion was successful, remove it from the Pantry object instance
+				unset($this->ingredients[$ingredient->getName()]); // does not re-index, but preserves keys
+			}
+			pg_close($dbconn);
+			return $result;
+		} else { // ingredient isn't in the pantry
+			return false;
+		}
 	}
 }
