@@ -37,10 +37,24 @@ class Pantry
 
 	/* addIngredient
 	 * Adds an ingredient to the User's pantry
+	 * @userId - The ID of the user account whose pantry is being modified
 	 * @ingredient The ingredient being added
+	 * @return - the pg_execute result if successful, otherwise false (either pg_execute failed, or the ingredient is already in the db)
 	 */
-	public function addIngredient ($ingredient) {
-		// TODO: add ingredient
+	public function addIngredient ($userId, $ingredient) {
+		$dbconn = connectToDatabase();
+
+		if (!$this->hasIngredient($ingredient)) {
+			$query = pg_prepare($dbconn, "addIngredientToPantry", "INSERT INTO account_has_ingredient VALUES ($1, $2)");
+			$result = pg_execute($dbconn, "addIngredientToPantry", array($userId, $ingredient->getId()));
+			if ($result) {
+				// if the insertion was successful, add it to the pantry object
+				$this->ingredients[$ingredient->getName()] = array($ingredient, date("Y-m-d"));
+			}
+			return $result;
+		} else { // ingredient already exists
+			return false;
+		}
 	}
 
 	/* removeIngredient
