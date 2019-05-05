@@ -42,10 +42,9 @@ class Pantry
 	 * @return - the pg_execute result if successful, otherwise false (either pg_execute failed, or the ingredient is already in the db)
 	 */
 	public function addIngredient ($userId, $ingredient) {
-		$dbconn = connectToDatabase();
-
 		// check to make sure the ingredient isn't already in the pantry
 		if (!$this->hasIngredient($ingredient)) {
+			$dbconn = connectToDatabase();
 			$query = pg_prepare($dbconn, "addIngredientToPantry", "INSERT INTO account_has_ingredient VALUES ($1, $2)");
 			$result = pg_execute($dbconn, "addIngredientToPantry", array($userId, $ingredient->getId()));
 			if ($result) {
