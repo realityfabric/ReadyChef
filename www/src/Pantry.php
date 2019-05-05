@@ -44,6 +44,7 @@ class Pantry
 	public function addIngredient ($userId, $ingredient) {
 		$dbconn = connectToDatabase();
 
+		// check to make sure the ingredient isn't already in the pantry
 		if (!$this->hasIngredient($ingredient)) {
 			$query = pg_prepare($dbconn, "addIngredientToPantry", "INSERT INTO account_has_ingredient VALUES ($1, $2)");
 			$result = pg_execute($dbconn, "addIngredientToPantry", array($userId, $ingredient->getId()));
