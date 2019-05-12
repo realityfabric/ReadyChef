@@ -1,6 +1,14 @@
 # ReadyChef
 A program for managing recipes and kitchen stock.
 
+# WARNING: THIS PROJECT IS NOT READY FOR DEPLOYMENT
+
+## PASSWORDS ARE NOT PROTECTED IN TRANSIT
+
+There are warnings on the login and registration pages, but you have been thrice warned.
+
+# About ReadyChef
+
 There are two key components to the database:
 * ingredients in a person's stock
 * ingredients in recipes
