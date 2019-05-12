@@ -1,6 +1,7 @@
 <?php
 include_once("../config/config.php");
 include_once("../src/Category.php");
+include_once("../src/DBConnect.php");
 
 class Ingredient
 {
@@ -91,4 +92,111 @@ class Ingredient
 		pg_close($dbconn);
 		return $ingredient;
 	}
+
+	public static function loadIngredientByName ($name) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "selectIngredient", "SELECT * FROM ingredient WHERE name = $1");
+		$result = pg_execute($dbconn, "selectIngredient", array($name));
+		$row = pg_fetch_assoc($result);
+
+		// TODO: load categories for the loaded ingredient
+
+		$ingredientId = $row['id'];
+		$ingredientName = $row['name'];
+		$categories = array();
+
+		// TODO: input validation / sanitization
+		$result = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $id");
+
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$categoryId = $row['category_id'];
+			$categories[] = Category::loadCategory($categoryId);
+		}
+
+		$ingredient = new Ingredient ($ingredientId, $ingredientName, $categories);
+
+		pg_close($dbconn);
+		return $ingredient;
+	}
+
+	public static function createIngredient ($name, $categories = array()) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "checkIngredient", "SELECT * FROM ingredient WHERE name =  $1");
+		$result = pg_execute($dbconn, "checkIngredient", array($name));
+
+		if (pg_num_rows($result) > 0) {
+			return false;
+		}
+
+		// TODO: input validation / sanitization
+		$insertResult = pg_insert($dbconn, "ingredient", array("name" => $name));
+
+		// TODO: insert categories
+		return $insertResult;
+	}
+
+	public static function getAll () {
+		$dbconn = connectToDatabase();
+
+		$ingredientsResult = pg_query($dbconn, "SELECT * FROM ingredient");
+
+		$ingredients = array();
+
+		while (($ingredientsRow = pg_fetch_assoc($ingredientsResult)) != false) {
+			$ingredientId = $ingredientsRow['id'];
+			$ingredientName = $ingredientsRow['name'];
+			$categories = array();
+
+			// TODO: input validation / sanitization
+			$categoriesResult = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $ingredientId");
+
+			while (($categoriesRow = pg_fetch_assoc($categoriesResult)) != false) {
+				$categoryId = $categoriesRow['category_id'];
+				$categories[] = Category::loadCategory($categoryId);
+			}
+
+			$ingredient = new Ingredient($ingredientsRow['id'], $ingredientsRow['name'], $categories);
+
+			$ingredients[] = $ingredient;
+		}
+
+		pg_close($dbconn);
+		return $ingredients;
+	}
+
+	/* toJSON
+	 * Creates a JSON copy of the object
+	 */
+	public function toJSON () {
+		$categoriesJSON = "[";
+		foreach ($this->categories as $category) {
+			$categoriesJSON .= $category->getJSON() . ",";
+		}
+		$categoriesJSON = rtrim($categoriesJSON, ",");
+		$categoriesJSON .= "]";
+
+		$json = "{'id': " . $this->id . ", 'name': \"" . $this->name . "\", 'categories': " . $categoriesJSON . "}";
+
+ 		return $json;
+	}
+
+	/* toPHPArray
+	 * Creates a copy of the object as an assciated array
+	 */
+	public function toPHPArray () {
+		$arr = array ();
+		$categoriesArr = array();
+		foreach($categories as $category) {
+			$categoriesArr[] = $category->toPHPArray();
+		}
+
+		$arr['id'] = $this->id;
+		$arr['name'] = $this->name;
+		$arr['categories'] = $categoriesArr;
+
+		return $arr;
+	}
 }
+?>
