@@ -48,6 +48,8 @@ if(isset($_POST['submit'])) {
 	}
 } else if(isset($_SESSION['user'])) {
 	echo "<p>You are logged in as {$_SESSION['user']->getUsername()}. If this is not you, please <a href='logout.php'>log out</a>.</p>";
+
+	$is_registered = true;
 }
 
 if (!$is_registered) {
