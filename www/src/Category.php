@@ -51,5 +51,20 @@ class Category
 		pg_close($dbconn);
 		return $category;
 	}
+
+	public function getJSON () {
+		$json = "{'id': " . $this->id . ", 'name': \"" . $this->name . "\"}";
+
+		return $json;
+	}
+
+	public function toPHPArray () {
+		$arr = array();
+
+		$arr['id'] = $this->id;
+		$arr['name'] = $this->name;
+
+		return $arr;
+	}
 }
 ?>
