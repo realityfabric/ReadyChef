@@ -1,7 +1,7 @@
 <?php
 include_once("../config/config.php");
 include_once("../src/User.php");
-session_start()
+session_start();
 ?>
 <!doctype html>
 <html>
