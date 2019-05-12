@@ -121,4 +121,8 @@ class User
 	public function removeIngredientFromPantry ($ingredient) {
 		return $this->pantry->removeIngredient($this->id, $ingredient);
 	}
+
+	public function getIngredientsFromPantry () {
+		return $this->pantry->getIngredients();
+	}
 }

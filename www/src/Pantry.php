@@ -80,4 +80,8 @@ class Pantry
 			return false;
 		}
 	}
+
+	public function getIngredients () {
+		return $this->ingredients;
+	}
 }
