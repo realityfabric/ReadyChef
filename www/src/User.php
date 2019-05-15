@@ -39,6 +39,13 @@ class User
 		return $this->username;
 	}
 
+	/* getUsernameHTMLSafe
+	 * @return the username of the user account, converted to HTML entities
+	 */
+	public function getUsernameHTMLSafe () {
+		return htmlspecialchars($this->username);
+	}
+
 	/* getPantry
 	 * Generates a Pantry object and assigns it to the User instance
 	 * @pantry Returns the Pantry object

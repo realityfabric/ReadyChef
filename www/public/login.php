@@ -31,7 +31,7 @@ $logged_in = false;
 	}
 
 	if(isset($_SESSION['user'])) {
-		echo "<p>Welcome, " . $_SESSION['user']->getUsername() . "</p>";
+		echo "<p>Welcome, " . $_SESSION['user']->getUsernameHTMLSafe() . "</p>";
 	} else {
 		if($login_failed) {
 			echo "<p>Username or password is incorrect. Please try again.</p>";
