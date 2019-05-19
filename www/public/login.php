@@ -6,6 +6,7 @@ include_once("../src/User.php");
 session_start();
 
 $logged_in = false;
+$login_failed = false;
 
 if (isset($_POST['submit'])) {
 	// TODO: input validation
