@@ -25,35 +25,81 @@ session_start();
 		<label for="ratio">Only search for recipes you have all of the ingredients for.</label>
 	</p>
 </form>
-<table>
-	<tr>
-		<th>Recipe Name</th>
-		<th>Categories</th>
-	</tr>
-	<?php
-		$userId = $_SESSION['user']->getId();
-		$ratio = 0;
-		if (isset($_POST["ratio"])) {
-			$ratio = 1;
+<?php
+$recipeLoaded = false;
+if (isset($_GET['id'])) {
+	$recipeLoaded = Recipe::loadRecipe($_GET['id']);
+	if ($recipeLoaded) {
+		?>
+		</section>
+		<section>
+		<h1><?php echo $recipeLoaded->getName(); ?></h1>
+		<h3>Ingredients:</h3>
+		<ul>
+		<?php
+		foreach ($recipeLoaded->getIngredients() as $ingredient) {
+			echo "<li>{$ingredient['ingredient']->getName()}
+				<br />{$ingredient['quantity']}</li>";
 		}
-		$recipes = Recipe::searchByDBPantry($userId, $ratio);
+		?>
+		</ul>
+		<h3>Instructions:</h3>
+		<p><?php echo $recipeLoaded->getInstructions(); ?></p>
 
-		foreach ($recipes as $recipe) {
-			$recipeName = $recipe->getName();
-			$recipeCategories = $recipe->getCategories();
-			?>
-			<tr>
-				<td>
-					<?php echo $recipeName; ?>
-				</td>
-				<td>
-					<?php echo implode(",", $recipeCategories); ?>
-				</td>
-			</tr>
+		<h3>Categories</h3>
+		<p>
 			<?php
-		}
+			$categories = implode(",", $recipeLoaded->getCategories());
+			if ($categories != "") {
+				echo implode(",", $recipeLoaded->getCategories());
+			} else { // no categories returned
+				echo "No categories listed for this recipe.";
+			}
+			?>
+		</p>
+		</section>
+		<?php
+	}
+}
+
+if (!$recipeLoaded) {
 	?>
-</table>
+	<table>
+		<tr>
+			<th>Recipe Name</th>
+			<th>Categories</th>
+			<th></th>
+		</tr>
+		<?php
+			$userId = $_SESSION['user']->getId();
+			$ratio = 0;
+			if (isset($_POST["ratio"])) {
+				$ratio = 1;
+			}
+			$recipes = Recipe::searchByDBPantry($userId, $ratio);
+
+			foreach ($recipes as $recipe) {
+				$recipeName = $recipe->getName();
+				$recipeCategories = $recipe->getCategories();
+				?>
+				<tr>
+						<td>
+							<?php echo $recipeName; ?>
+						</td>
+						<td>
+							<?php echo implode(",", $recipeCategories); ?>
+						</td>
+						<td>
+							<a href="search.php?id=<?php echo $recipe->getId(); ?>">Recipe</a>
+						</td>
+				</tr>
+				<?php
+			}
+		?>
+	</table>
+	<?php
+}
+?>
 </section>
 </body>
 <?php include("../includes/footer.php"); ?>
