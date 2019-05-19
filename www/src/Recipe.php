@@ -136,6 +136,9 @@ class Recipe
 			);
 			$rowIngredient = pg_fetch_assoc($resultIngredient);
 			// TODO: can I use Ingredient::loadIngredient() instead of new Ingredient?
+			// tested it: it breaks things. why? if i knew that it wouldn't break them anymore.
+			// it isn't closing dbconn, but it seems to break pg_execute
+//			$ingredient = Ingredient::loadIngredient($rowIngredient['id']);
 			$ingredient = new Ingredient ($rowIngredient['id'], $rowIngredient['name'], array()); // TODO: include categories
 			$ingredients[$ingredient->getName()] = array("ingredient" => $ingredient, "quantity" => $row['quantity']);
 		}
