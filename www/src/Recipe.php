@@ -239,4 +239,25 @@ class Recipe
 		pg_close($dbconn);
 		return $recipeIds;
 	}
+
+	public static function loadRecipeByName ($name) {
+		$dbconn = connectToDatabase();
+
+		$query =
+			pg_prepare($dbconn,
+			"selectRecipeByName",
+			"SELECT recipe.id, recipe.name, recipe.instructions FROM recipe WHERE name = $1"
+		);
+		$result = pg_execute($dbconn, "selectRecipeByName", array($name));
+		$row = pg_fetch_assoc($result);
+		$recipeId = $row['id'];
+		$recipeName = $row['name'];
+		$recipeInstructions = $row['instructions'];
+
+		$ingredients = Recipe::loadRecipeIngredients($recipeId);
+		$categories = Recipe::loadRecipeCategories($recipeId);
+
+		$recipe = new Recipe($recipeId, $recipeName, $recipeInstructions, $ingredients, $categories);
+		return $recipe;
+	}
 }
