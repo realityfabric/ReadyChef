@@ -275,4 +275,42 @@ class Recipe
 		$recipe = new Recipe($recipeId, $recipeName, $recipeInstructions, $ingredients, $categories);
 		return $recipe;
 	}
+
+	public static function createRecipe ($name, $instructions, $ingredients, $categories = array()) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "checkRecipe", "SELECT * FROM recipe WHERE name =  $1");
+		$result = pg_execute($dbconn, "checkRecipe", array($name));
+
+		if (pg_num_rows($result) > 0) {
+			return false;
+		}
+
+		// TODO: input validation / sanitization
+		$insertResult = pg_insert($dbconn, "recipe", array("name" => $name, "instructions" => $instructions));
+
+		pg_close($dbconn);
+		$recipe = Recipe::loadRecipeByName($name);
+
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "insertIngredient", "INSERT INTO recipe_has_ingredient (recipe_id, ingredient_id, quantity) VALUES ($1, $2, $3)");
+		foreach ($ingredients as $ingredient) {
+			$id = $recipe->getId();
+			$ing_id = $ingredient['ingredient']->getId();
+			$qty = $ingredient['quantity'];
+
+			$insertIngredientResult = pg_execute($dbconn, "insertIngredient", array( $id, $ing_id, $qty));
+		}
+
+		$query = pg_prepare($dbconn, "insertCategory", "INSERT INTO recipe_has_category (recipe_id, category_id) VALUES ($1, $2)");
+		foreach ($categories as $category) {
+			$id = $recipe->getId();
+			$cat_id = $category->getId();
+			$insertCategoryResult = pg_execute($dbconn, "insertCategory", array($id, $cat_id));
+		}
+
+		// TODO: insert categories
+		return $insertResult; // TODO: return success or failure based on more than that
+	}
 }
