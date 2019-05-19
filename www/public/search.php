@@ -49,9 +49,13 @@ if (isset($_GET['id'])) {
 		<h3>Categories</h3>
 		<p>
 			<?php
-			$categories = implode(",", $recipeLoaded->getCategories());
+			$categoriesArray = array();
+			foreach ($recipeLoaded->getCategories() as $category) {
+				$categoriesArray[] = $category->getName();
+			}
+			$categories = implode(",", $categoriesArray);
 			if ($categories != "") {
-				echo implode(",", $recipeLoaded->getCategories());
+				echo $categories;
 			} else { // no categories returned
 				echo "No categories listed for this recipe.";
 			}
@@ -81,13 +85,17 @@ if (!$recipeLoaded) {
 			foreach ($recipes as $recipe) {
 				$recipeName = $recipe->getName();
 				$recipeCategories = $recipe->getCategories();
+				$categoriesArray = array();
+				foreach ($recipeCategories as $category) {
+					$categoriesArray[] = $category->getName();
+				}
 				?>
 				<tr>
 						<td>
 							<?php echo $recipeName; ?>
 						</td>
 						<td>
-							<?php echo implode(",", $recipeCategories); ?>
+							<?php echo implode(",", $categoriesArray); ?>
 						</td>
 						<td>
 							<a href="search.php?id=<?php echo $recipe->getId(); ?>">Recipe</a>
