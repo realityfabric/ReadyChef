@@ -118,7 +118,7 @@ class Recipe
 		$query =
 			pg_prepare($dbconn,
 			"selectRecipeIngredientIds",
-			"SELECT recipe_has_ingredient.ingredient_id FROM recipe_has_ingredient JOIN recipe ON recipe.id = recipe_has_ingredient.recipe_id WHERE recipe.id = $1"
+			"SELECT recipe_has_ingredient.ingredient_id, recipe_has_ingredient.quantity FROM recipe_has_ingredient JOIN recipe ON recipe.id = recipe_has_ingredient.recipe_id WHERE recipe.id = $1"
 		);
 		$resultIds = pg_execute($dbconn, "selectRecipeIngredientIds", array($id));
 
@@ -135,14 +135,13 @@ class Recipe
 				array($row['ingredient_id'])
 			);
 			$rowIngredient = pg_fetch_assoc($resultIngredient);
+			// TODO: can I use Ingredient::loadIngredient() instead of new Ingredient?
 			$ingredient = new Ingredient ($rowIngredient['id'], $rowIngredient['name'], array()); // TODO: include categories
-			$ingredients[$ingredient->getName()] = $ingredient;
+			$ingredients[$ingredient->getName()] = array("ingredient" => $ingredient, "quantity" => $row['quantity']);
 		}
 
 		pg_close($dbconn);
-		return $ingredients; // TODO: THIS DOESN'T MATCH THE EXPECTED RESULTS
-							// expected results: array(Ingredient ingredient, String quantity)
-							// actual results: array(ingredient_name => Ingredient ingredient)
+		return $ingredients;
 	}
 
 	/* loadRecipeCategories
