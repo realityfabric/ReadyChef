@@ -7,6 +7,19 @@ session_start();
 
 $logged_in = false;
 
+if (isset($_POST['submit'])) {
+	// TODO: input validation
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$user = User::login($username, $password);
+
+	if (!$user) {
+		$login_failed = true;
+	} else {
+		$_SESSION['user'] = $user;
+		$logged_in = true;
+	}
+}
 ?>
 <!doctype html>
 <html>
@@ -16,20 +29,6 @@ $logged_in = false;
 <body>
 <?php include("../includes/header.php"); ?>
 <?php
-	if (isset($_POST['submit'])) {
-		// TODO: input validation
-		$username = $_POST['username'];
-		$password = $_POST['password'];
-		$user = User::login($username, $password);
-
-		if (!$user) {
-			$login_failed = true;
-		} else {
-			$_SESSION['user'] = $user;
-			$logged_in = true;
-		}
-	}
-
 	if(isset($_SESSION['user'])) {
 		echo "<p>Welcome, " . $_SESSION['user']->getUsernameHTMLSafe() . "</p>";
 	} else {

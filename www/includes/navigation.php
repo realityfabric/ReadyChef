@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <nav>
 <a href="index.php">Home</a>
 <a href="login.php">Log In</a>
