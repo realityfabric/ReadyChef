@@ -135,12 +135,14 @@ class Recipe
 				array($row['ingredient_id'])
 			);
 			$rowIngredient = pg_fetch_assoc($resultIngredient);
-			$ingredient = new Ingredient ($rowIngredient['id'], $rowIngredient['name']);
+			$ingredient = new Ingredient ($rowIngredient['id'], $rowIngredient['name'], array()); // TODO: include categories
 			$ingredients[$ingredient->getName()] = $ingredient;
 		}
 
 		pg_close($dbconn);
-		return $ingredients;
+		return $ingredients; // TODO: THIS DOESN'T MATCH THE EXPECTED RESULTS
+							// expected results: array(Ingredient ingredient, String quantity)
+							// actual results: array(ingredient_name => Ingredient ingredient)
 	}
 
 	/* loadRecipeCategories
