@@ -52,6 +52,36 @@ class Category
 		return $category;
 	}
 
+	public static function loadCategoryByName ($name) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "selectCategory", "SELECT * FROM category WHERE name = $1");
+		$result = pg_execute($dbconn, "selectCategory", array($name));
+		$row = pg_fetch_assoc($result);
+
+		$category = new Category($row['id'], $row['name']);
+
+		pg_close($dbconn);
+		return $category;
+	}
+
+	public static function createCategory ($name) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "checkCategory", "SELECT * FROM category WHERE name =  $1");
+		$result = pg_execute($dbconn, "checkCategory", array($name));
+
+		if (pg_num_rows($result) > 0) {
+			return false;
+		}
+
+		// TODO: input validation / sanitization
+		$insertResult = pg_insert($dbconn, "category", array("name" => $name));
+
+		// TODO: insert categories
+		return $insertResult;
+	}
+
 	public function getJSON () {
 		$json = "{'id': " . $this->id . ", 'name': \"" . $this->name . "\"}";
 
