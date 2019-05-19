@@ -1,4 +1,9 @@
 <?php
+include_once("../config/config.php");
+include_once("../src/DBConnect.php");
+include_once("../src/Category.php");
+include_once("../src/Ingredient.php");
+
 class Recipe
 {
 	private $id; // int
@@ -258,6 +263,14 @@ class Recipe
 
 		$ingredients = Recipe::loadRecipeIngredients($recipeId);
 		$categories = Recipe::loadRecipeCategories($recipeId);
+
+		if (!$ingredients) {
+			$ingredients = array();
+		}
+
+		if (!$categories) {
+			$categories = array();
+		}
 
 		$recipe = new Recipe($recipeId, $recipeName, $recipeInstructions, $ingredients, $categories);
 		return $recipe;
