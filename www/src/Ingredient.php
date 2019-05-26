@@ -150,7 +150,8 @@ class Ingredient
 			$categories = array();
 
 			// TODO: input validation / sanitization
-			$categoriesResult = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $ingredientId");
+			$dbconn2 = connectToDatabase();
+			$categoriesResult = pg_query($dbconn2, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $ingredientId");
 
 			while (($categoriesRow = pg_fetch_assoc($categoriesResult)) != false) {
 				$categoryId = $categoriesRow['category_id'];
@@ -162,6 +163,7 @@ class Ingredient
 			$ingredients[] = $ingredient;
 		}
 
+		pg_close($dbconn2);
 		pg_close($dbconn);
 		return $ingredients;
 	}
