@@ -1,5 +1,6 @@
 <?php
 include_once("../config/config.php");
+include_once("../src/DBConnect.php");
 include_once("../src/Ingredient.php");
 
 class Pantry
