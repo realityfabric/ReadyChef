@@ -247,6 +247,11 @@ class Recipe
 		return $recipeIds;
 	}
 
+	/* loadRecipeByName
+	 * Creates a Recipe object (and associated child objects) based on the record in the recipe table with the name passed as an argument
+	 * @name - The name of the recipe being loaded
+	 * @return - The Recipe object created
+	 */
 	public static function loadRecipeByName ($name) {
 		$dbconn = connectToDatabase();
 
@@ -276,6 +281,15 @@ class Recipe
 		return $recipe;
 	}
 
+	/* createRecipe
+	 * Creates a recipe in the DB.
+	 * @name - (String:) The name of the recipe
+	 * @instructions - (String:) The instructions for preparing the recipe
+	 * @ingredients - (Array of Arrays:) The ingredients necessary to make the recipe, and their quantities
+	 *					in the form array ( array ( "ingredient" => Ingredient , "quantity" => String )[, ...])
+	 * @categories - (Array of Category:) The categories associated with the recipe. Default is an empty array.
+	 * @return - Boolean value indicating whether the creation was successful (True for Success, False for Failure)
+	 */
 	public static function createRecipe ($name, $instructions, $ingredients, $categories = array()) {
 		$dbconn = connectToDatabase();
 
