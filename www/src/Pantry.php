@@ -18,7 +18,7 @@ class Pantry
 
 		$ingredientInfos = array();
 		while (($row = pg_fetch_assoc($result)) != false) {
-			$ingredientInfo[] = array (
+			$ingredientInfos[] = array (
 				"id" => $row['ingredient_id'],
 				"date_purchased" => $row['date_purchased']
 			);
@@ -30,6 +30,7 @@ class Pantry
 
 			$this->ingredients[$ingredient->getName()] = array($ingredient, $info['date_purchased']);
 		}
+
 	}
 
 	/* hasIngredient
