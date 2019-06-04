@@ -327,4 +327,68 @@ class Recipe
 		// TODO: insert categories
 		return $insertResult; // TODO: return success or failure based on more than that
 	}
+
+	/* searchRecipesPatternMatching
+	 * Searches the Database for recipes using pattern matching.
+	 * @pattern - (String:) The pattern to search for.
+	 *				Currently supports SQL pattern matching (using LIKE)
+	 * @options - (Array:) Optional arguments. By default the pattern will only match recipe names. Options should all be boolean.
+	 *				Current accepted options:
+	 *				- name
+	 *				- instructions
+	 * @return - (Array of Recipe:) An array of recipes found using the given pattern.
+	 */
+	public static function searchRecipesPatternMatching ($pattern, $options = array("name" => true, "instructions" => false)) {
+		$dbconn = connectToDatabase();
+
+		// will be set to either $pattern or an empty string based on whether they are set to true in $options
+		$values = array ();
+		// used to prevent adding a table multiple times to the FROM clause
+		// more tables can be added as necessary
+		$tables = array (
+			"recipe" => true // this will always be true, because recipe table must be included to get recipe.id in the SELECT clause
+		);
+
+		$select = "SELECT recipe.id ";
+		$from = "FROM recipe";
+
+		// not looping over $values to prevent bad keys being injected
+		if ($options["name"]) {
+			$values["name"] = $pattern;
+			$tables["recipe"] = true;
+		} else {
+			$values["name"] = "";
+		}
+		if ($options["instructions"]) {
+			$values["instructions"] = $pattern;
+			$tables["recipe"] = true;
+		} else {
+			$values["instructions"] = "";
+		}
+
+		// $1 will be $values["name"]
+		// $2 will be $values["instructions"]
+		$where = " WHERE LOWER(recipe.name) LIKE LOWER($1) OR LOWER(recipe.instructions) LIKE LOWER($2)";
+
+		$queryString = $select . $from . $where;
+		$query = pg_prepare($dbconn,
+			"searchRecipesPatternMatching",
+			$queryString
+		);
+
+		$result = pg_execute($dbconn, "searchRecipesPatternMatching", array ($values["name"], $values["instructions"]));
+
+		$recipeIds = array();
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$recipeIds[] = $row["id"];
+		}
+		pg_close($dbconn);
+
+		$recipes = array();
+		foreach($recipeIds as $id) {
+			$recipes[] = Recipe::loadRecipe($id);
+		}
+
+		return $recipes;
+	}
 }
