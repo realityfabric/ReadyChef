@@ -145,31 +145,18 @@ class Ingredient
 	public static function getAll () {
 		$dbconn = connectToDatabase();
 
-		$ingredientsResult = pg_query($dbconn, "SELECT * FROM ingredient");
-
+		$ingredientsResult = pg_query($dbconn, "SELECT id FROM ingredient");
 		$ingredients = array();
-
+		$ingredientIds = array();
 		while (($ingredientsRow = pg_fetch_assoc($ingredientsResult)) != false) {
-			$ingredientId = $ingredientsRow['id'];
-			$ingredientName = $ingredientsRow['name'];
-			$categories = array();
+			$ingredientIds[] = $ingredientsRow['id'];
+		}
+		pg_close($dbconn);
 
-			// TODO: input validation / sanitization
-			$dbconn2 = connectToDatabase();
-			$categoriesResult = pg_query($dbconn2, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $ingredientId");
-
-			while (($categoriesRow = pg_fetch_assoc($categoriesResult)) != false) {
-				$categoryId = $categoriesRow['category_id'];
-				$categories[] = Category::loadCategory($categoryId);
-			}
-
-			$ingredient = new Ingredient($ingredientsRow['id'], $ingredientsRow['name'], $categories);
-
-			$ingredients[] = $ingredient;
+		foreach ($ingredientIds as $id) {
+			$ingredients[] = Ingredient::loadIngredient($id);
 		}
 
-		pg_close($dbconn2);
-		pg_close($dbconn);
 		return $ingredients;
 	}
 
