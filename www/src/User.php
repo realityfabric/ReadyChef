@@ -69,6 +69,7 @@ class User
 		$query = pg_prepare($dbconn, "selectUser", "SELECT * FROM account WHERE username = $1");
 		$result = pg_execute($dbconn, "selectUser", array($sanitize_username));
 		$account = pg_fetch_assoc($result);
+		pg_close($dbconn);
 
 		// TODO: implement login logging
 		if (password_verify($password, $account['hash'])) {
@@ -76,10 +77,8 @@ class User
 			$pantry = new Pantry($id);
 			$user = new User($id, $sanitize_username, $pantry);
 
-			pg_close($dbconn);
 			return $user;
 		} else {
-			pg_close($dbconn);
 			return false;
 		}
 	}

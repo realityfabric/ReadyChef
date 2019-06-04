@@ -82,14 +82,19 @@ class Ingredient
 		// TODO: input validation / sanitization
 		$result = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $id");
 
+		$categoryIds = array();
 		while (($row = pg_fetch_assoc($result)) != false) {
-			$categoryId = $row['category_id'];
-			$categories[] = Category::loadCategory($categoryId);
+			$categoryIds[] = $row['category_id'];
+		}
+		pg_close($dbconn);
+
+		foreach($categoryIds as $id) {
+			$categories[] = Category::loadCategory($id);
 		}
 
 		$ingredient = new Ingredient ($ingredientId, $ingredientName, $categories);
 
-		pg_close($dbconn);
+
 		return $ingredient;
 	}
 

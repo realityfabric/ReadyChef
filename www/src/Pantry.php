@@ -16,14 +16,20 @@ class Pantry
 		$query = pg_prepare($dbconn, "selectPantry", "SELECT * FROM account_has_ingredient WHERE account_id = $1");
 		$result = pg_execute($dbconn, "selectPantry", array($userId));
 
+		$ingredientInfos = array();
 		while (($row = pg_fetch_assoc($result)) != false) {
-			$ingredientId = $row['ingredient_id'];
-			$ingredient = Ingredient::loadIngredient($ingredientId);
-
-			$this->ingredients[$ingredient->getName()] = array($ingredient, $row['date_purchased']);
+			$ingredientInfo[] = array (
+				"id" => $row['ingredient_id'],
+				"date_purchased" => $row['date_purchased']
+			);
 		}
-
 		pg_close($dbconn);
+
+		foreach($ingredientInfos as $info) {
+			$ingredient = Ingredient::loadIngredient($info['id']);
+
+			$this->ingredients[$ingredient->getName()] = array($ingredient, $info['date_purchased']);
+		}
 	}
 
 	/* hasIngredient
