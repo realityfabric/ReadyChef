@@ -7,6 +7,7 @@ session_start();
 <!doctype html>
 <html>
 <head>
+	<?php include("../includes/layout.php"); ?>
 	<title>Search</title>
 </head>
 <?php include("../includes/header.php"); ?>
@@ -118,7 +119,8 @@ if (!$recipeLoaded) {
 				if (isset($_POST["search-category-name"]))
 					$options["categories"] = true;
 
-				$recipes = Recipe::searchRecipesPatternMatching($_POST["search-string"], $options);
+				if (isset($_POST["search-string"]))
+					$recipes = Recipe::searchRecipesPatternMatching($_POST["search-string"], $options);
 			}
 
 
