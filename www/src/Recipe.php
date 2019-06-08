@@ -388,7 +388,20 @@ class Recipe
 			$queryString
 		);
 
-		$result = pg_execute($dbconn, "searchRecipesPatternMatching", array ($values["name"], $values["instructions"], $values["ingredients"]));
+		// each pattern must be a separate argument
+		// to allow the user to *not* match against a field
+		// this comment is here because i forgot why i did that
+		// and i didn't want to spend another 10 minutes figuring it out later
+		// when i inevitably forget why again
+		$result = pg_execute(
+			$dbconn,
+			"searchRecipesPatternMatching",
+			array (
+				$values["name"],
+				$values["instructions"],
+				$values["ingredients"]
+			)
+		);
 
 		$recipeIds = array();
 		while (($row = pg_fetch_assoc($result)) != false) {
