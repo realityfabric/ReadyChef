@@ -353,6 +353,8 @@ class Recipe
 		$from = "FROM recipe";
 		$from .= " JOIN recipe_has_ingredient ON recipe.id = recipe_has_ingredient.recipe_id";
 		$from .= " JOIN ingredient ON ingredient.id = recipe_has_ingredient.ingredient_id";
+		$from .= " JOIN recipe_has_category ON recipe.id = recipe_has_category.recipe_id";
+		$from .= " JOIN category on category.id = recipe_has_category.category_id";
 
 		// not looping over $values to prevent bad keys being injected
 		if (isset($options["name"]) && $options["name"]) {
@@ -373,13 +375,21 @@ class Recipe
 		} else {
 			$values["ingredients"] = "";
 		}
-
+		if (isset($options["categories"])) {
+			$values["categories"] = $pattern;
+			$tables["category"] = true;
+		} else {
+			$values["categories"] = "";
+		}
 
 		// $1 will be $values["name"]
 		// $2 will be $values["instructions"]
+		// $3 will be $values["ingredients"]
+		// $4 will be $values["categories"]
 		$where = " WHERE LOWER(recipe.name) LIKE LOWER($1)";
 		$where .= " OR LOWER(recipe.instructions) LIKE LOWER($2)";
 		$where .= " OR LOWER(ingredient.name) LIKE LOWER($3)";
+		$where .= " OR LOWER(category.name) LIKE LOWER($4)";
 
 		$group = " GROUP BY recipe.id";
 		$queryString = $select . $from . $where . $group;
@@ -399,7 +409,8 @@ class Recipe
 			array (
 				$values["name"],
 				$values["instructions"],
-				$values["ingredients"]
+				$values["ingredients"],
+				$values["categories"]
 			)
 		);
 
