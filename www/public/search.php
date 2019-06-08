@@ -22,7 +22,7 @@ session_start();
 			}
 			?>
 		/>
-		<label for="ratio">Only search for recipes you have all of the ingredients for.</label>
+		<label for="ratio">Get recipes you have all of the ingredients for.</label>
 	</p>
 </form>
 <?php
