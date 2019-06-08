@@ -338,7 +338,7 @@ class Recipe
 	 *				- instructions
 	 * @return - (Array of Recipe:) An array of recipes found using the given pattern.
 	 */
-	public static function searchRecipesPatternMatching ($pattern, $options = array("name" => true, "instructions" => false)) {
+	public static function searchRecipesPatternMatching ($pattern, $options = array("name" => true)) {
 		$dbconn = connectToDatabase();
 
 		// will be set to either $pattern or an empty string based on whether they are set to true in $options
@@ -353,13 +353,13 @@ class Recipe
 		$from = "FROM recipe";
 
 		// not looping over $values to prevent bad keys being injected
-		if ($options["name"]) {
+		if (isset($options["name"]) && $options["name"]) {
 			$values["name"] = $pattern;
 			$tables["recipe"] = true;
 		} else {
 			$values["name"] = "";
 		}
-		if ($options["instructions"]) {
+		if (isset($options["instructions"]) && $options["instructions"]) {
 			$values["instructions"] = $pattern;
 			$tables["recipe"] = true;
 		} else {
