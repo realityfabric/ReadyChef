@@ -1,0 +1,20 @@
+:root {
+	--footer-height: 50px;
+}
+
+footer {
+	background: white;
+	position: fixed;
+	height: var(--footer-height);
+	bottom: 0px;
+	left: 0;
+	right: 0;
+	padding: 5px;
+}
+
+body {
+	margin-bottom: calc(
+		var(--footer-height) + 50px
+	);
+	overflow: auto;
+}

@@ -25,6 +25,7 @@ if (isset($_POST['submit'])) {
 <!doctype html>
 <html>
 <head>
+<?php include("../includes/layout.php"); ?>
 <title>Login Page</title>
 </head>
 <body>

@@ -15,6 +15,7 @@ session_destroy();
 <!doctype html>
 <html>
 <head>
+	<?php include("../includes/layout.php"); ?>
 	<title>Logout</title>
 </head>
 <body>

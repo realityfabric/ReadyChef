@@ -7,6 +7,7 @@ session_start();
 <!doctype html>
 <html>
 <head>
+	<?php include("../includes/layout.php"); ?>
 	<title>Register</title>
 </head>
 <?php include("../includes/header.php"); ?>
