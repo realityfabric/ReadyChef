@@ -351,6 +351,8 @@ class Recipe
 
 		$select = "SELECT recipe.id ";
 		$from = "FROM recipe";
+		$from .= " JOIN recipe_has_ingredient ON recipe.id = recipe_has_ingredient.recipe_id";
+		$from .= " JOIN ingredient ON ingredient.id = recipe_has_ingredient.ingredient_id";
 
 		// not looping over $values to prevent bad keys being injected
 		if (isset($options["name"]) && $options["name"]) {
@@ -365,18 +367,28 @@ class Recipe
 		} else {
 			$values["instructions"] = "";
 		}
+		if (isset($options["ingredients"])) {
+			$values["ingredients"] = $pattern;
+			$tables["ingredient"] = true;
+		} else {
+			$values["ingredients"] = "";
+		}
+
 
 		// $1 will be $values["name"]
 		// $2 will be $values["instructions"]
-		$where = " WHERE LOWER(recipe.name) LIKE LOWER($1) OR LOWER(recipe.instructions) LIKE LOWER($2)";
+		$where = " WHERE LOWER(recipe.name) LIKE LOWER($1)";
+		$where .= " OR LOWER(recipe.instructions) LIKE LOWER($2)";
+		$where .= " OR LOWER(ingredient.name) LIKE LOWER($3)";
 
-		$queryString = $select . $from . $where;
+		$group = " GROUP BY recipe.id";
+		$queryString = $select . $from . $where . $group;
 		$query = pg_prepare($dbconn,
 			"searchRecipesPatternMatching",
 			$queryString
 		);
 
-		$result = pg_execute($dbconn, "searchRecipesPatternMatching", array ($values["name"], $values["instructions"]));
+		$result = pg_execute($dbconn, "searchRecipesPatternMatching", array ($values["name"], $values["instructions"], $values["ingredients"]));
 
 		$recipeIds = array();
 		while (($row = pg_fetch_assoc($result)) != false) {
