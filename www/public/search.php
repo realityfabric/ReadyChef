@@ -28,6 +28,10 @@ session_start();
 			<input type="checkbox" name="search-recipe-instructions" <?php if(isset($_POST["search-recipe-instructions"])) echo "checked=1"; ?> />
 			<label for="search-recipe-instructions">recipe instructions</label>
 		</li>
+		<li>
+			<input type="checkbox" name="search-ingredient-name" <?php if(isset($_POST["search-ingredient-name"])) echo "checked=1"; ?> />
+			<label for="search-ingredient-name">ingredient</label>
+		</li>
 	</ul>
 	<p>
 		<input type="submit" name="submit" value="Search for Recipes" />
@@ -103,6 +107,9 @@ if (!$recipeLoaded) {
 
 				if (isset($_POST["search-recipe-instructions"]))
 					$options["instructions"] = true;
+
+				if (isset($_POST["search-ingredient-name"]))
+					$options["ingredients"] = true;
 
 				$recipes = Recipe::searchRecipesPatternMatching($_POST["search-string"], $options);
 			}
