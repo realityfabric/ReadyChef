@@ -351,10 +351,10 @@ class Recipe
 
 		$select = "SELECT recipe.id ";
 		$from = "FROM recipe";
-		$from .= " JOIN recipe_has_ingredient ON recipe.id = recipe_has_ingredient.recipe_id";
-		$from .= " JOIN ingredient ON ingredient.id = recipe_has_ingredient.ingredient_id";
-		$from .= " JOIN recipe_has_category ON recipe.id = recipe_has_category.recipe_id";
-		$from .= " JOIN category on category.id = recipe_has_category.category_id";
+		$from .= " LEFT JOIN recipe_has_ingredient ON recipe.id = recipe_has_ingredient.recipe_id";
+		$from .= " LEFT JOIN ingredient ON ingredient.id = recipe_has_ingredient.ingredient_id";
+		$from .= " LEFT JOIN recipe_has_category ON recipe.id = recipe_has_category.recipe_id";
+		$from .= " LEFT JOIN category on category.id = recipe_has_category.category_id";
 
 		// not looping over $values to prevent bad keys being injected
 		if (isset($options["name"]) && $options["name"]) {
