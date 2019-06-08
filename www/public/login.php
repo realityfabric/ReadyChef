@@ -38,9 +38,6 @@ if (isset($_POST['submit'])) {
 		}
 
 		?>
-		<!-- TODO: implement SSL -->
-		<h1>WARNING: THIS PAGE IS NOT SECURED WITH SSL</h1>
-		<h1>WARNING: THIS IS FOR TESTING PURPOSES ONLY</h1>
 			<form action='login.php' method='post'>
 				<p>username: <input type='text' name='username' /></p>
 				<p>password: <input type='password' name='password' /></p>

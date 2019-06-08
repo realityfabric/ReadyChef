@@ -55,9 +55,6 @@ if(isset($_POST['submit'])) {
 if (!$is_registered) {
 ?>
 	<h1>Register with ReadyChef!</h1>
-	<!-- TODO: implement SSL -->
-	<h1>WARNING: THIS PAGE IS NOT SECURED WITH SSL</h1>
-	<h1>WARNING: THIS IS FOR TESTING PURPOSES ONLY</h1>
 
 	<form action='register.php' method='post'>
 		<p>username: <input type='text' name='username' /></p>
