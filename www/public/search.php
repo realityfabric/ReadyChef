@@ -13,6 +13,22 @@ session_start();
 <body>
 <section>
 <form name="search" action="search.php" method="post">
+	<h1>Search for Recipes.</h1>
+	<p>You can use SQL Pattern Matching for more advanced searches. For example, use % as a wildcard.</p>
+	<p>
+		<input type="text" name="search-string" placeholder="Search for Recipes" />
+	</p>
+	<p>Search by:</p>
+	<ul id="search-options" class="options">
+		<li>
+			<input type="checkbox" name="search-recipe-name" <?php if(isset($_POST["search-recipe-name"])) echo "checked=1"; ?> />
+			<label for="search-recipe-name">recipe name</label>
+		</li>
+		<li>
+			<input type="checkbox" name="search-recipe-instructions" <?php if(isset($_POST["search-recipe-instructions"])) echo "checked=1"; ?> />
+			<label for="search-recipe-instructions">recipe instructions</label>
+		</li>
+	</ul>
 	<p>
 		<input type="submit" name="submit" value="Search for Recipes" />
 		<input type="checkbox" name="ratio"
@@ -76,11 +92,21 @@ if (!$recipeLoaded) {
 		</tr>
 		<?php
 			$userId = $_SESSION['user']->getId();
-			$ratio = 0;
+			$recipes = array();
 			if (isset($_POST["ratio"])) {
-				$ratio = 1;
+				$recipes = Recipe::searchByDBPantry($userId, 1);
+			} else {
+				$options = array();
+
+				if (isset($_POST["search-recipe-name"]))
+					$options["name"] = true;
+
+				if (isset($_POST["search-recipe-instructions"]))
+					$options["instructions"] = true;
+
+				$recipes = Recipe::searchRecipesPatternMatching($_POST["search-string"], $options);
 			}
-			$recipes = Recipe::searchByDBPantry($userId, $ratio);
+
 
 			foreach ($recipes as $recipe) {
 				$recipeName = $recipe->getName();
