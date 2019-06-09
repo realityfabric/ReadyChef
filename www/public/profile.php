@@ -101,7 +101,7 @@ if (isset($_POST["submitAdd"])) {
 			<form name="addIngredient" action="profile.php" method="post">
 				<td>
 					<?php
-					echo $ingredient->getName();
+					echo $ingredient->getNameHTMLSafe();
 					?>
 				</td>
 				<td>
@@ -109,7 +109,7 @@ if (isset($_POST["submitAdd"])) {
 					$categories = $ingredient->getCategories();
 					$arr = array();
 					foreach ($categories as $category) {
-						$arr[] = $category->getName();
+						$arr[] = $category->getNameHTMLSafe();
 					}
 					echo implode(",", $arr);
 					?>

@@ -26,6 +26,11 @@ class Category
 		return $this->name;
 	}
 
+	public function getNameHTMLSafe () {
+		return  htmlspecialchars($this->name);
+	}
+
+
 	/* getId
 	 * Returns the id of the category
 	 * @return the id of the Category instance

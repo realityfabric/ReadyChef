@@ -31,6 +31,11 @@ class Ingredient
 		return $this->name;
 	}
 
+	public function getNameHTMLSafe () {
+		return  htmlspecialchars($this->name);
+	}
+
+
 	/* getId
 	 * Returns the id of the ingredient
 	 * @return the id of the Ingredient instance

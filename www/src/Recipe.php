@@ -36,6 +36,10 @@ class Recipe
 		return $this->name;
 	}
 
+	public function getNameHTMLSafe () {
+		return  htmlspecialchars($this->name);
+	}
+
 	/* getId
 	 * Returns the id of the Recipe
 	 * @return The ID of the Recipe instance
@@ -66,6 +70,10 @@ class Recipe
 	 */
 	public function getInstructions () {
 		return $this->instructions;
+	}
+
+	public function getInstructionsHTMLSafe () {
+		return htmlspecialchars($this->instructions);
 	}
 
 	/* hasCategory

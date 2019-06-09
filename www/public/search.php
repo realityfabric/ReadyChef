@@ -52,25 +52,25 @@ if (isset($_GET['id'])) {
 		?>
 		</section>
 		<section>
-		<h1><?php echo $recipeLoaded->getName(); ?></h1>
+		<h1><?php echo $recipeLoaded->getNameHTMLSafe(); ?></h1>
 		<h3>Ingredients:</h3>
 		<ul>
 		<?php
 		foreach ($recipeLoaded->getIngredients() as $ingredient) {
-			echo "<li>{$ingredient['ingredient']->getName()}
+			echo "<li>{$ingredient['ingredient']->getNameHTMLSafe()}
 				<br />{$ingredient['quantity']}</li>";
 		}
 		?>
 		</ul>
 		<h3>Instructions:</h3>
-		<p><?php echo $recipeLoaded->getInstructions(); ?></p>
+		<p><?php echo $recipeLoaded->getInstructionsHTMLSafe(); ?></p>
 
 		<h3>Categories</h3>
 		<p>
 			<?php
 			$categoriesArray = array();
 			foreach ($recipeLoaded->getCategories() as $category) {
-				$categoriesArray[] = $category->getName();
+				$categoriesArray[] = $category->getNameHTMLSafe();
 			}
 			$categories = implode(",", $categoriesArray);
 			if ($categories != "") {
@@ -116,11 +116,11 @@ if (!$recipeLoaded) {
 				$recipes = Recipe::searchRecipesPatternMatching($_POST["search-string"], $options);
 
 			foreach ($recipes as $recipe) {
-				$recipeName = $recipe->getName();
+				$recipeName = $recipe->getNameHTMLSafe();
 				$recipeCategories = $recipe->getCategories();
 				$categoriesArray = array();
 				foreach ($recipeCategories as $category) {
-					$categoriesArray[] = $category->getName();
+					$categoriesArray[] = $category->getNameHTMLSafe();
 				}
 				?>
 				<tr>
