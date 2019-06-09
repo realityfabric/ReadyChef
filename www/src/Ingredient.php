@@ -66,7 +66,7 @@ class Ingredient
 		return false;
 	}
 
-	/* loadIngredient
+	/* loadIngredient - DEPRECATED
 	 * Searches the database for an ingredient and returns an instance of it
 	 * @id - The ID of the ingredient in the DB
 	 * @return - An instance of Ingredient matching the ID
@@ -103,6 +103,46 @@ class Ingredient
 		return $ingredient;
 	}
 
+	/* load
+	 * Searches the database for an ingredient and returns an instance of it
+	 * @id - The ID of the ingredient in the DB
+	 * @return - An instance of Ingredient matching the ID
+	 */
+	public static function load ($id) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "selectIngredient", "SELECT * FROM ingredient WHERE id = $1");
+		$result = pg_execute($dbconn, "selectIngredient", array($id));
+		$row = pg_fetch_assoc($result);
+
+		// TODO: load categories for the loaded ingredient
+
+		$ingredientId = $row['id'];
+		$ingredientName = $row['name'];
+		$categories = array();
+
+		// TODO: input validation / sanitization
+		$result = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $id");
+
+		$categoryIds = array();
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$categoryIds[] = $row['category_id'];
+		}
+		pg_close($dbconn);
+
+		foreach($categoryIds as $id) {
+			$categories[] = Category::loadCategory($id);
+		}
+
+		$ingredient = new Ingredient ($ingredientId, $ingredientName, $categories);
+
+
+		return $ingredient;
+	}
+
+	/* loadIngredientByName - DEPRECATED
+
+	 */
 	public static function loadIngredientByName ($name) {
 		$dbconn = connectToDatabase();
 
@@ -117,7 +157,7 @@ class Ingredient
 		$categories = array();
 
 		// TODO: input validation / sanitization
-		$result = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $id");
+		$result = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $ingredientId");
 
 		while (($row = pg_fetch_assoc($result)) != false) {
 			$categoryId = $row['category_id'];
@@ -127,6 +167,37 @@ class Ingredient
 		$ingredient = new Ingredient ($ingredientId, $ingredientName, $categories);
 
 		pg_close($dbconn);
+		return $ingredient;
+	}
+
+	/* loadByName
+	 */
+	public static function loadByName ($name) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "selectIngredient", "SELECT * FROM ingredient WHERE name = $1");
+		$result = pg_execute($dbconn, "selectIngredient", array($name));
+		$row = pg_fetch_assoc($result);
+
+		// TODO: load categories for the loaded ingredient
+
+		$ingredientId = $row['id'];
+		$ingredientName = $row['name'];
+
+		// TODO: input validation / sanitization
+		$result = pg_query($dbconn, "SELECT * FROM ingredient_has_category WHERE ingredient_id = $ingredientId");
+
+		$categoryIds = array();
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$categoryIds[] = $row['category_id'];
+		}
+		pg_close($dbconn);
+		$categories = array();
+		foreach ($categoryIds as $categoryId) {
+			$categories[] = Category::loadCategory($categoryId);
+		}
+		$ingredient = new Ingredient ($ingredientId, $ingredientName, $categories);
+
 		return $ingredient;
 	}
 
@@ -140,12 +211,31 @@ class Ingredient
 			return false;
 		}
 
-		// TODO: input validation / sanitization
 		$query = pg_prepare($dbconn, "insertIngredient", "INSERT INTO ingredient (name) VALUES ($1)");
 		$insertResult = pg_execute($dbconn, "insertIngredient", array($name));
 
-		// TODO: insert categories
-		return $insertResult;
+		pg_close($dbconn);
+
+		if ($insertResult) {
+			$ingredient = Ingredient::loadByName($name);
+			foreach($categories as $category) {
+				Ingredient::addCategory($ingredient->getId(), $category->getId());
+			}
+			$ingredient = Ingredient::loadByName($name); // reload with newly added categories
+			return $ingredient;
+		} else {
+			return $insertResult;
+		}
+	}
+
+	public static function addCategory ($ingredientId, $categoryId) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "addCategoryToIngredient", "INSERT INTO ingredient_has_category VALUES ($1, $2)");
+		$result = pg_execute($dbconn, "addCategoryToIngredient", array($ingredientId, $categoryId));
+
+		pg_close($dbconn);
+		return $result;
 	}
 
 	public static function getAll () {
