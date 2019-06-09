@@ -75,7 +75,7 @@ if (isset($_POST["submitAdd"])) {
 						</td>
 						<td>
 						<input type="hidden" name="ingredientId" value="<?php echo $ingredient[0]->getId(); ?>" />
-						<input type="submit" name="submitRemove" value="<?php echo "Remove {$ingredient[0]->getName()}"; ?>" />
+						<input type="submit" name="submitRemove" value="<?php echo "Remove"; ?>" />
 						</td>
 					</tr>
 				</form>
@@ -116,7 +116,7 @@ if (isset($_POST["submitAdd"])) {
 				</td>
 				<td>
 					<input type="hidden" name="ingredientId" value="<?php echo $ingredient->getId(); ?>" />
-					<input type="submit" name="submitAdd" value="<?php echo "Add {$ingredient->getName()}"; ?>" />
+					<input type="submit" name="submitAdd" value="<?php echo "Add"; ?>" />
 				</td>
 			</form>
 		</tr>
