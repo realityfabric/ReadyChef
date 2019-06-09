@@ -141,7 +141,8 @@ class Ingredient
 		}
 
 		// TODO: input validation / sanitization
-		$insertResult = pg_insert($dbconn, "ingredient", array("name" => $name));
+		$query = pg_prepare($dbconn, "insertIngredient", "INSERT INTO ingredient (name) VALUES ($1)");
+		$insertResult = pg_execute($dbconn, "insertIngredient", array($name));
 
 		// TODO: insert categories
 		return $insertResult;
