@@ -3,28 +3,29 @@ include_once("../config/config.php");
 include_once("../src/DBConnect.php");
 include_once("../src/Category.php");
 include_once("../src/Ingredient.php");
+include_once("../src/RecipeIngredient.php");
 
 class Recipe
 {
 	private $id; // int
 	private $name; // string
 	private $instructions; // string
-	private $ingredients; // array of tuples (Ingredient objects, quantity)
+	private $recipeIngredients; // RecipeIngredient object
 	private $categories; // array of Category objects
 
 	/* __construct
 	 * @id - the recipe id
 	 * @name - the recipe name
 	 * @instructions - the recipe instructions
-	 * @ingredients - an array of Ingredients associated with the recipe
+	 * @ingredients - an array of RecipeIngredient objects associated with the recipe
 	 * @categories - an array of Categories associated with the recipe
 	 */
-	public function __construct ($id, $name, $instructions, $ingredients, $categories) {
+	public function __construct ($id, $name, $instructions, $recipeIngredients, $categories) {
 		// TODO: input validation
 		$this->id = $id;
 		$this->name = $name;
 		$this->instructions = $instructions;
-		$this->ingredients = $ingredients;
+		$this->recipeIngredients = $recipeIngredients;
 		$this->categories = $categories;
 	}
 
@@ -56,12 +57,12 @@ class Recipe
 		return $this->categories;
 	}
 
-	/* getIngredients
-	 * Returns an array of tuples which consist of ingredients and their quantities, as required by the recipe
-	 * @return The array of tuples of Ingredient objects and Quantities.
+	/* getRecipeIngredients
+	 * Returns an array RecipeIngredient objects
+	 * @return The array of RecipeIngredient objects
 	 */
-	public function getIngredients () {
-		return $this->ingredients;
+	public function getRecipeIngredients () {
+		return $this->recipeIngredients;
 	}
 
 	/* getInstructions
@@ -117,16 +118,16 @@ class Recipe
 	}
 
 	/* loadRecipeIngredients
-	 * searches the database for ingredients associated with the recipe
+	 * searches the database for ingredients and quantities associated with the recipe
 	 * @id - the id of the recipe
 	 * @dbconn - a database connection, or false if a new database connection should be established
-	 * @return - an array of Ingredient objects
+	 * @return - an array of RecipeIngredient objects
 	 */
 	public static function loadRecipeIngredients ($id, $dbconn = false) {
 		if (!$dbconn)
 			$dbconn = connectToDatabase();
 
-		$ingredients = array();
+		$recipeIngredients = array();
 
 		$query =
 			pg_prepare($dbconn,
@@ -153,11 +154,11 @@ class Recipe
 			// it isn't closing dbconn, but it seems to break pg_execute
 //			$ingredient = Ingredient::loadIngredient($rowIngredient['id']);
 			$ingredient = new Ingredient ($rowIngredient['id'], $rowIngredient['name'], array()); // TODO: include categories
-			$ingredients[$ingredient->getName()] = array("ingredient" => $ingredient, "quantity" => $row['quantity']);
+			$recipeIngredients[] = new RecipeIngredient($ingredient, $row['quantity']);
 		}
 
 		pg_close($dbconn);
-		return $ingredients;
+		return $recipeIngredients;
 	}
 
 	/* loadRecipeCategories
@@ -293,12 +294,11 @@ class Recipe
 	 * Creates a recipe in the DB.
 	 * @name - (String:) The name of the recipe
 	 * @instructions - (String:) The instructions for preparing the recipe
-	 * @ingredients - (Array of Arrays:) The ingredients necessary to make the recipe, and their quantities
-	 *					in the form array ( array ( "ingredient" => Ingredient , "quantity" => String )[, ...])
+	 * @recipeIngredients - Array of RecipeIngredient objects associated with the recipe
 	 * @categories - (Array of Category:) The categories associated with the recipe. Default is an empty array.
 	 * @return - Boolean value indicating whether the creation was successful (True for Success, False for Failure)
 	 */
-	public static function createRecipe ($name, $instructions, $ingredients, $categories = array()) {
+	public static function createRecipe ($name, $instructions, $recipeIngredients, $categories = array()) {
 		$dbconn = connectToDatabase();
 
 		$query = pg_prepare($dbconn, "checkRecipe", "SELECT * FROM recipe WHERE name =  $1");
@@ -317,10 +317,10 @@ class Recipe
 		$dbconn = connectToDatabase();
 
 		$query = pg_prepare($dbconn, "insertIngredient", "INSERT INTO recipe_has_ingredient (recipe_id, ingredient_id, quantity) VALUES ($1, $2, $3)");
-		foreach ($ingredients as $ingredient) {
+		foreach ($recipeIngredients as $recipeIngredient) {
 			$id = $recipe->getId();
-			$ing_id = $ingredient['ingredient']->getId();
-			$qty = $ingredient['quantity'];
+			$ing_id = $recipeIngredient->getIngredient()->getId();
+			$qty = $recipeIngredient->getQuantity();
 
 			$insertIngredientResult = pg_execute($dbconn, "insertIngredient", array( $id, $ing_id, $qty));
 		}
@@ -332,8 +332,9 @@ class Recipe
 			$insertCategoryResult = pg_execute($dbconn, "insertCategory", array($id, $cat_id));
 		}
 
-		// TODO: insert categories
-		return $insertResult; // TODO: return success or failure based on more than that
+		$recipe = Recipe::loadRecipeByName($name);
+
+		return $recipe; // TODO: return success or failure based on more than that
 	}
 
 	/* searchRecipesPatternMatching
