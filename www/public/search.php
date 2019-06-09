@@ -131,7 +131,7 @@ if (!$recipeLoaded) {
 							<?php echo implode(",", $categoriesArray); ?>
 						</td>
 						<td>
-							<a href="search.php?id=<?php echo $recipe->getId(); ?>">Recipe</a>
+							<a href="search.php?id=<?php echo $recipe->getId(); ?>">View Recipe</a>
 						</td>
 				</tr>
 				<?php
