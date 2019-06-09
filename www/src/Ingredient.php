@@ -238,7 +238,27 @@ class Ingredient
 		return $result;
 	}
 
+	/* getAll - DEPRECATED
+	 */
 	public static function getAll () {
+		$dbconn = connectToDatabase();
+
+		$ingredientsResult = pg_query($dbconn, "SELECT id FROM ingredient");
+		$ingredients = array();
+		$ingredientIds = array();
+		while (($ingredientsRow = pg_fetch_assoc($ingredientsResult)) != false) {
+			$ingredientIds[] = $ingredientsRow['id'];
+		}
+		pg_close($dbconn);
+
+		foreach ($ingredientIds as $id) {
+			$ingredients[] = Ingredient::loadIngredient($id);
+		}
+
+		return $ingredients;
+	}
+
+	public static function loadAll () {
 		$dbconn = connectToDatabase();
 
 		$ingredientsResult = pg_query($dbconn, "SELECT id FROM ingredient");
