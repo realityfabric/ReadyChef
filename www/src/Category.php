@@ -39,12 +39,25 @@ class Category
 		return $this->id;
 	}
 
-	/* loadCategory
+	/* loadCategory - DEPRECATED // left in because it's used places, but it should be removed and not used moving forward
 	 * Searches the database and returns the category associated with the ID
 	 * @id - The ID of the category in the DB
 	 * @return - An instance of the Category, or false
 	 */
 	public static function loadCategory ($id) {
+		$dbconn = connectToDatabase();
+
+		$query = pg_prepare($dbconn, "selectCategory", "SELECT * FROM category WHERE id = $1");
+		$result = pg_execute($dbconn, "selectCategory", array($id));
+		$row = pg_fetch_assoc($result);
+
+		$category = new Category($row['id'], $row['name']);
+
+		pg_close($dbconn);
+		return $category;
+	}
+
+	public static function load ($id) {
 		$dbconn = connectToDatabase();
 
 		$query = pg_prepare($dbconn, "selectCategory", "SELECT * FROM category WHERE id = $1");
@@ -68,6 +81,23 @@ class Category
 
 		pg_close($dbconn);
 		return $category;
+	}
+
+	public static function loadAll () {
+		$dbconn = connectToDatabase();
+
+		$result = pg_query($dbconn, "SELECT id FROM category");
+		$categoryIds = array();
+		while (($row = pg_fetch_assoc($result)) != false) {
+			$categoryIds[] = $row["id"];
+		}
+
+		$categories = array();
+		foreach ($categoryIds as $id) {
+			$categories[] = Category::loadCategory($id);
+		}
+
+		return $categories;
 	}
 
 	public static function createCategory ($name) {
