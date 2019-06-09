@@ -56,9 +56,9 @@ if (isset($_GET['id'])) {
 		<h3>Ingredients:</h3>
 		<ul>
 		<?php
-		foreach ($recipeLoaded->getIngredients() as $ingredient) {
-			echo "<li>{$ingredient['ingredient']->getNameHTMLSafe()}
-				<br />{$ingredient['quantity']}</li>";
+		foreach ($recipeLoaded->getRecipeIngredients() as $recipeIngredient) {
+			echo "<li>{$recipeIngredient->getIngredient()->getNameHTMLSafe()}
+				<br />{$recipeIngredient->getQuantityHTMLSafe()}</li>";
 		}
 		?>
 		</ul>
