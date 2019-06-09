@@ -40,14 +40,8 @@ session_start();
 	</ul>
 	<p>
 		<input type="submit" name="submit" value="Search for Recipes" />
-		<input type="checkbox" name="ratio"
-			<?php
-			if(isset($_POST["ratio"])) {
-				echo "checked=1";
-			}
-			?>
-		/>
-		<label for="ratio">Get recipes you have all of the ingredients for.</label>
+		<input type="checkbox" name="search-by-pantry" <?php if(isset($_POST["search-by-pantry"])) echo "checked=1"; ?> />
+		<label for="search-by-pantry">Only show recipes if all ingredients are available</label>
 	</p>
 </form>
 <?php
@@ -100,29 +94,26 @@ if (!$recipeLoaded) {
 			<th></th>
 		</tr>
 		<?php
-			$userId = $_SESSION['user']->getId();
 			$recipes = array();
-			if (isset($_POST["ratio"])) {
-				$recipes = Recipe::searchByDBPantry($userId, 1);
-			} else {
-				$options = array();
+			$options = array();
 
-				if (isset($_POST["search-recipe-name"]))
-					$options["name"] = true;
+			if (isset($_POST["search-recipe-name"]))
+				$options["name"] = true;
 
-				if (isset($_POST["search-recipe-instructions"]))
-					$options["instructions"] = true;
+			if (isset($_POST["search-recipe-instructions"]))
+				$options["instructions"] = true;
 
-				if (isset($_POST["search-ingredient-name"]))
-					$options["ingredients"] = true;
+			if (isset($_POST["search-ingredient-name"]))
+				$options["ingredients"] = true;
 
-				if (isset($_POST["search-category-name"]))
-					$options["categories"] = true;
+			if (isset($_POST["search-category-name"]))
+				$options["categories"] = true;
 
-				if (isset($_POST["search-string"]))
-					$recipes = Recipe::searchRecipesPatternMatching($_POST["search-string"], $options);
-			}
+			if (isset($_POST["search-by-pantry"]))
+				$options["in_pantry"] = true;
 
+			if (isset($_POST["search-string"]))
+				$recipes = Recipe::searchRecipesPatternMatching($_POST["search-string"], $options);
 
 			foreach ($recipes as $recipe) {
 				$recipeName = $recipe->getName();

@@ -343,6 +343,9 @@ class Recipe
 
 		// will be set to either $pattern or an empty string based on whether they are set to true in $options
 		$values = array ();
+		// user id is necessary even if $options["in_pantry"] is not set or is false.
+		$values["user_id"] = $_SESSION["user"]->getId();
+
 		// used to prevent adding a table multiple times to the FROM clause
 		// more tables can be added as necessary
 		$tables = array (
@@ -381,15 +384,47 @@ class Recipe
 		} else {
 			$values["categories"] = "";
 		}
+		if (isset($options["in_pantry"])) {
+			$tables["account_has_ingredient"] = true;
+		}
 
-		// $1 will be $values["name"]
-		// $2 will be $values["instructions"]
-		// $3 will be $values["ingredients"]
-		// $4 will be $values["categories"]
-		$where = " WHERE LOWER(recipe.name) LIKE LOWER($1)";
-		$where .= " OR LOWER(recipe.instructions) LIKE LOWER($2)";
-		$where .= " OR LOWER(ingredient.name) LIKE LOWER($3)";
-		$where .= " OR LOWER(category.name) LIKE LOWER($4)";
+		// $1 will be $values["user_id"]
+			// user id is 1 because it's the odd one out
+			// and putting it at the beginning is less weird than having it in the middle
+			// or constantly renumbering it when adding new options
+		// $2 will be $values["name"]
+		// $3 will be $values["instructions"]
+		// $4 will be $values["ingredients"]
+		// $5 will be $values["categories"]
+		$where = " WHERE (";
+		$where .= " LOWER(recipe.name) LIKE LOWER($2)";
+		$where .= " OR LOWER(recipe.instructions) LIKE LOWER($3)";
+		$where .= " OR LOWER(ingredient.name) LIKE LOWER($4)";
+		$where .= " OR LOWER(category.name) LIKE LOWER($5)";
+		$where .= " AND $1 = $1"; // this line is necessary or else Postgresql freaks out when $options["in_pantry"] is not set
+		$where .= " )";
+
+		if (isset($options["in_pantry"])) {
+			$where .=
+				" AND recipe.id IN (
+					SELECT
+						recipe.id
+					FROM account_has_ingredient
+						JOIN recipe_has_ingredient rhi
+							ON account_has_ingredient.ingredient_id = rhi.ingredient_id
+						JOIN recipe
+							ON recipe.id = rhi.recipe_id
+					WHERE account_has_ingredient.account_id = CAST($1 AS INTEGER)
+					GROUP BY recipe.id, rhi.recipe_id
+					HAVING (
+						COUNT(*) / (
+							SELECT COUNT(*)
+							FROM recipe_has_ingredient
+							WHERE recipe_id = rhi.recipe_id
+						)
+					) >= 1
+				)";
+		}
 
 		$group = " GROUP BY recipe.id";
 		$queryString = $select . $from . $where . $group;
@@ -407,6 +442,7 @@ class Recipe
 			$dbconn,
 			"searchRecipesPatternMatching",
 			array (
+				$values["user_id"],
 				$values["name"],
 				$values["instructions"],
 				$values["ingredients"],
