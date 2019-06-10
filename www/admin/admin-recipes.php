@@ -76,7 +76,7 @@
 					<p>Categories:</p>
 					<ul>
 					<?php
-					foreach($ingredient->getCategories() as $category) {
+					foreach($recipe->getCategories() as $category) {
 						echo "<li>{$category->getNameHTMLSafe()}</li>";
 					}
 					?>
