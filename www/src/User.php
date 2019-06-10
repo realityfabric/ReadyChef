@@ -71,16 +71,26 @@ class User
 		$account = pg_fetch_assoc($result);
 		pg_close($dbconn);
 
+		$user = false; // false by default
 		// TODO: implement login logging
 		if (password_verify($password, $account['hash'])) {
 			$id = $account['id'];
 			$pantry = new Pantry($id);
 			$user = new User($id, $sanitize_username, $pantry);
-
-			return $user;
-		} else {
-			return false;
 		}
+
+		$dbconn = connectToDatabase();
+		$query = pg_prepare($dbconn, "loginHistory", "INSERT INTO login_history (username, success) VALUES ($1, $2)");
+
+		// success is false by default
+		// postgresql accepts the boolean value 'false' as a string, but complains if you pass a boolean
+		// thus the use of strings below
+		$success = 'false';
+		if ($user != false) $success = 'true';
+		else $success = 'false';
+		$result = pg_execute($dbconn, "loginHistory", array($username, $success));
+
+		return $user;
 	}
 
 	/* register
