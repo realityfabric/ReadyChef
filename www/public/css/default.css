@@ -13,8 +13,25 @@ footer {
 }
 
 body {
+	font-family: Arial, Helvetica, sans-serif;
 	margin-bottom: calc(
 		var(--footer-height) + 50px
 	);
 	overflow: auto;
+}
+
+table {
+	border: 1px solid black;
+}
+table th {
+	border:1px solid black;
+	padding: 10px;
+}
+table td {
+	border: 1px solid black;
+	padding: 5px;
+}
+
+table tr:hover {
+	background-color: gray;
 }
