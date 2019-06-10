@@ -93,7 +93,7 @@ if (isset($_POST["submitAdd"])) {
 			<th></th> <!-- this is intentionally blank because there are 3 columns -->
 		</tr>
 	<?php
-	$ingredients = Ingredient::getAll();
+	$ingredients = Ingredient::loadAll();
 
 	foreach ($ingredients as $ingredient) {
 		?>
