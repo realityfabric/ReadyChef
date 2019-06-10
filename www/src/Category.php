@@ -86,7 +86,7 @@ class Category
 	public static function loadAll () {
 		$dbconn = connectToDatabase();
 
-		$result = pg_query($dbconn, "SELECT id FROM category");
+		$result = pg_query($dbconn, "SELECT id FROM category ORDER BY category.name");
 		$categoryIds = array();
 		while (($row = pg_fetch_assoc($result)) != false) {
 			$categoryIds[] = $row["id"];

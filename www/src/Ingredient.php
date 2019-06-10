@@ -261,7 +261,7 @@ class Ingredient
 	public static function loadAll () {
 		$dbconn = connectToDatabase();
 
-		$ingredientsResult = pg_query($dbconn, "SELECT id FROM ingredient");
+		$ingredientsResult = pg_query($dbconn, "SELECT id FROM ingredient ORDER BY ingredient.name");
 		$ingredients = array();
 		$ingredientIds = array();
 		while (($ingredientsRow = pg_fetch_assoc($ingredientsResult)) != false) {

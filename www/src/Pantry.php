@@ -13,7 +13,16 @@ class Pantry
 		$this->ingredients = array();
 
 		// This isn't particularly secure...
-		$query = pg_prepare($dbconn, "selectPantry", "SELECT * FROM account_has_ingredient WHERE account_id = $1");
+		$query = pg_prepare(
+			$dbconn,
+			"selectPantry",
+			"SELECT *
+			 FROM account_has_ingredient
+				JOIN ingredient
+					ON ingredient.id = account_has_ingredient.ingredient_id
+			WHERE account_id = $1
+			ORDER BY ingredient.name"
+		);
 		$result = pg_execute($dbconn, "selectPantry", array($userId));
 
 		$ingredientInfos = array();
