@@ -31,10 +31,13 @@ class Ingredient
 		return $this->name;
 	}
 
+	/* getNameHTMLSafe
+	 * Returns the name of the ingredient, converted to prevent script injection
+	 * @return - The name of the ingredient with special characters converted
+	 */
 	public function getNameHTMLSafe () {
 		return  htmlspecialchars($this->name);
 	}
-
 
 	/* getId
 	 * Returns the id of the ingredient
@@ -141,7 +144,8 @@ class Ingredient
 	}
 
 	/* loadIngredientByName - DEPRECATED
-
+	 * @name - the name of the ingredient to be loaded
+	 * @return - an instance of Ingredient matching the given name
 	 */
 	public static function loadIngredientByName ($name) {
 		$dbconn = connectToDatabase();
@@ -171,6 +175,8 @@ class Ingredient
 	}
 
 	/* loadByName
+	 * @name - the name of the ingredient to be loaded
+	 * @return - an instance of Ingredient matching the given name
 	 */
 	public static function loadByName ($name) {
 		$dbconn = connectToDatabase();
@@ -201,6 +207,12 @@ class Ingredient
 		return $ingredient;
 	}
 
+	/* createIngredient
+	 * Creates a new Ingredient record in the database, along with associated records for ingredient_has_category
+	 * @name - The name of the new ingredient
+	 * @categories - An array of categories associated with the ingredient
+	 * @return - An instance of the new ingredient on success, or false on failure.
+	 */
 	public static function createIngredient ($name, $categories = array()) {
 		$dbconn = connectToDatabase();
 
@@ -228,6 +240,12 @@ class Ingredient
 		}
 	}
 
+	/* addCategory
+	 * Adds a record in the ingredient_has_category table of the database
+	 * @ingredientId - The id of the ingredient which has the category associated with it
+	 * @categoryId - The id of the category which is associated with the ingredient
+	 * @return - A database resource on success, false on failure.
+	 */
 	public static function addCategory ($ingredientId, $categoryId) {
 		$dbconn = connectToDatabase();
 
@@ -239,6 +257,8 @@ class Ingredient
 	}
 
 	/* getAll - DEPRECATED
+	 * Loads all of the ingredients in the database. DEPRECATED
+	 * @return - an array of Ingredient objects
 	 */
 	public static function getAll () {
 		$dbconn = connectToDatabase();
@@ -258,6 +278,10 @@ class Ingredient
 		return $ingredients;
 	}
 
+	/* loadAll
+	 * Loads all of the ingredients from the database.
+	 * @return - An array of Ingredient objects.
+	 */
 	public static function loadAll () {
 		$dbconn = connectToDatabase();
 

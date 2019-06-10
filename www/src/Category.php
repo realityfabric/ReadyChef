@@ -26,6 +26,9 @@ class Category
 		return $this->name;
 	}
 
+	/* getNameHTMLSafe
+	 * @return the name of the category instance, with all special characters converted to prevent script injection
+	 */
 	public function getNameHTMLSafe () {
 		return  htmlspecialchars($this->name);
 	}
@@ -57,6 +60,10 @@ class Category
 		return $category;
 	}
 
+	/* load
+	 * @id - The id of the Category instance that is to be loaded
+	 * @return - an instance of Category matching the given id
+	 */
 	public static function load ($id) {
 		$dbconn = connectToDatabase();
 
@@ -70,6 +77,10 @@ class Category
 		return $category;
 	}
 
+	/* loadCategoryByName
+	 * @name - the name of the Category to be loaded
+	 * @return - an instance of Category matching the given name
+	 */
 	public static function loadCategoryByName ($name) {
 		$dbconn = connectToDatabase();
 
@@ -83,6 +94,9 @@ class Category
 		return $category;
 	}
 
+	/* loadAll
+	 * @return - An array of all Category records in the database
+	 */
 	public static function loadAll () {
 		$dbconn = connectToDatabase();
 
@@ -100,6 +114,11 @@ class Category
 		return $categories;
 	}
 
+	/* createCategory
+	 * Creates a new Category record in the database
+	 * @name - the name of the new Category
+	 * @return - A database resource on success, false on failure
+	 */
 	public static function createCategory ($name) {
 		$dbconn = connectToDatabase();
 
@@ -117,12 +136,20 @@ class Category
 		return $insertResult;
 	}
 
+	/* getJSON
+	 * A useless function that I immediately forgot the purpose for after writing it
+	 * @return - a JSON representation of the Category instance
+	 */
 	public function getJSON () {
 		$json = "{'id': " . $this->id . ", 'name': \"" . $this->name . "\"}";
 
 		return $json;
 	}
 
+	/* toPHPArray
+	 * A useless function that I immediately forgot the purpose for after writing it
+	 * @return - a PHP Array representation of the Category instance
+	 */
 	public function toPHPArray () {
 		$arr = array();
 

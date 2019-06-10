@@ -138,6 +138,9 @@ class User
 		return $this->pantry->removeIngredient($this->id, $ingredient);
 	}
 
+	/* getIngredientsFromPantry
+	 * @return - an array of Ingredient objects
+	 */
 	public function getIngredientsFromPantry () {
 		return $this->pantry->getIngredients();
 	}

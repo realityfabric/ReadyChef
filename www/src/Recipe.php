@@ -37,6 +37,10 @@ class Recipe
 		return $this->name;
 	}
 
+	/* getNameHTMLSafe
+	 * Converts dangerous characters to prevent script injection
+	 * @return - the name of the recipe
+	 */
 	public function getNameHTMLSafe () {
 		return  htmlspecialchars($this->name);
 	}
@@ -73,6 +77,10 @@ class Recipe
 		return $this->instructions;
 	}
 
+	/* getInstructionsHTMLSafe
+	 * Returns the instructions, with all special characters converted to prevent script injection
+	 * @return - the instructions, with converted characters
+	 */
 	public function getInstructionsHTMLSafe () {
 		return htmlspecialchars($this->instructions);
 	}

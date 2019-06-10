@@ -7,6 +7,10 @@ class Pantry
 {
 	private $ingredients; // Array of tuples (Ingredient, date)
 
+	/* __construct
+	 * Loads all ingredients a user has, as listed in account_has_ingredient
+	 * @userId - the id of the user account which the pantry is loaded for
+	 */
 	public function __construct ($userId) {
 		$dbconn = connectToDatabase();
 
@@ -98,6 +102,10 @@ class Pantry
 		}
 	}
 
+	/* getIngredients
+	 * Returns an array of ingredients stored in the Pantry object
+	 * @return - An array of Ingredient objects
+	 */
 	public function getIngredients () {
 		return $this->ingredients;
 	}
