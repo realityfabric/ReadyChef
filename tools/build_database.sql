@@ -13,7 +13,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE login_history (
-	account_id INTEGER REFERENCES account (id),
+	username VARCHAR(255),
 	success BOOL NOT NULL DEFAULT (FALSE),
 	login_time TIMESTAMP DEFAULT NOW()
 );
